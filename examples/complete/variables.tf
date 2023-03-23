@@ -16,10 +16,9 @@ variable "prefix" {
   default     = "test-security-group"
 }
 
-variable "vpc_name" {
+variable "vpc_id" {
   type        = string
-  description = "Name of the VPC"
-  default     = null
+  description = "ID of the VPC"
 }
 
 variable "resource_group" {
@@ -28,40 +27,11 @@ variable "resource_group" {
   default     = null
 }
 
-variable "resource_tags" {
-  type        = list(string)
-  description = "Optional list of tags to be added to created resources"
-  default     = []
-}
 
-variable "classic_access" {
-  description = "OPTIONAL - Classic Access to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "use_manual_address_prefixes" {
-  description = "OPTIONAL - Use manual address prefixes for VPC"
-  type        = bool
-  default     = false
-}
-
-variable "default_network_acl_name" {
-  description = "OPTIONAL - Name of the Default ACL. If null, a name will be automatically generated"
+variable "sg_name" {
+  description = "Name of the security group"
   type        = string
-  default     = null
-}
-
-variable "default_security_group_name" {
-  description = "OPTIONAL - Name of the Default Security Group. If null, a name will be automatically generated"
-  type        = string
-  default     = null
-}
-
-variable "default_routing_table_name" {
-  description = "OPTIONAL - Name of the Default Routing Table. If null, a name will be automatically generated"
-  type        = string
-  default     = null
+  default     = "test-sg"
 }
 
 variable "security_group_rules" {
@@ -120,4 +90,16 @@ variable "security_group_rules" {
       ])
     )) == 0
   }
+}
+
+variable "security_group_id" {
+  description = "ID of the default security group to which the rules are to be attached"
+  type        = string
+  default     = null
+}
+
+variable "create_security_group" {
+  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
+  type        = bool
+  default     = true
 }

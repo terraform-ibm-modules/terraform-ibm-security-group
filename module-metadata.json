@@ -1,12 +1,70 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "security_group_id": {
+      "name": "security_group_id",
+      "type": "string",
+      "description": "ID of the security group to which the rules are to be attached",
+      "required": true,
+      "source": [
+        "ibm_is_security_group_rule.default_vpc_rule.group"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 37
+      },
+      "immutable": true
+    },
+    "security_group_rules": {
+      "name": "security_group_rules",
+      "type": "list(\n    object({\n      add_ibm_internal_sg_rules = optional(bool)\n      prepend_ibm_rules         = optional(bool)\n      name                      = string\n      direction                 = string\n      remote                    = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
+      "description": "A list of security group rules to be added to the default vpc security group",
+      "default": [],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      }
+    }
+  },
+  "outputs": {
+    "security_group_rule": {
+      "name": "security_group_rule",
+      "description": "Security group rules",
+      "value": "ibm_is_security_group_rule.default_vpc_rule",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    }
+  },
   "required_core": [
-    "\u003e= 1.0.0"
+    "\u003e= 1.3.0"
   ],
-  "required_providers": {},
-  "managed_resources": {},
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e= 1.51.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_is_security_group_rule.default_vpc_rule": {
+      "mode": "managed",
+      "type": "ibm_is_security_group_rule",
+      "name": "default_vpc_rule",
+      "attributes": {
+        "group": "security_group_id"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 1
+      }
+    }
+  },
   "data_resources": {},
   "module_calls": {}
 }

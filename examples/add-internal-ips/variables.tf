@@ -16,22 +16,16 @@ variable "prefix" {
   default     = "test-security-group"
 }
 
-variable "vpc_name" {
-  type        = string
-  description = "Name of the VPC"
-  default     = null
-}
-
 variable "resource_group" {
   type        = string
   description = "An existing resource group name to use for this example, if unset a new resource group will be created"
   default     = null
 }
 
-variable "resource_tags" {
-  type        = list(string)
-  description = "Optional list of tags to be added to created resources"
-  default     = []
+variable "vpc_name" {
+  type        = string
+  description = "Name of the VPC"
+  default     = null
 }
 
 variable "classic_access" {
@@ -64,13 +58,21 @@ variable "default_routing_table_name" {
   default     = null
 }
 
+variable "resource_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to created resources"
+  default     = []
+}
+
 variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      name      = string
-      direction = string
-      remote    = string
+      add_ibm_internal_sg_rules = optional(bool)
+      prepend_ibm_rules         = optional(bool)
+      name                      = string
+      direction                 = string
+      remote                    = string
       tcp = optional(
         object({
           port_max = optional(number)
@@ -92,9 +94,15 @@ variable "security_group_rules" {
     })
   )
   default = [{
-    name      = "default-sgr"
-    direction = "inbound"
-    remote    = "10.0.0.0/8"
+    add_ibm_internal_sg_rules = true
+    prepend_ibm_rules         = true
+    name                      = "default-sgr"
+    direction                 = "inbound"
+    remote                    = "10.0.0.0/8"
+    tcp = {
+      port_min = 1
+      port_max = 65535
+    }
   }]
 
   validation {

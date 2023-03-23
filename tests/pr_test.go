@@ -11,6 +11,7 @@ import (
 // Use existing resource group
 const resourceGroup = "geretain-test-resources"
 const defaultExampleTerraformDir = "examples/default"
+const completeExampleTerraformDir = "examples/complete"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
@@ -18,7 +19,7 @@ func TestRunDefaultExample(t *testing.T) {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  defaultExampleTerraformDir,
-		Prefix:        "mod-template",
+		Prefix:        "test-sgr-default",
 		ResourceGroup: resourceGroup,
 	})
 
@@ -36,7 +37,7 @@ func TestRunUpgradeExample(t *testing.T) {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
 		TerraformDir:  defaultExampleTerraformDir,
-		Prefix:        "mod-template-upg",
+		Prefix:        "test-sgr-upg",
 		ResourceGroup: resourceGroup,
 	})
 
