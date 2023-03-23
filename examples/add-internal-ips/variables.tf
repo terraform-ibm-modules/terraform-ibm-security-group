@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-security-group"
+  default     = "test-sgr"
 }
 
 variable "resource_group" {
@@ -100,8 +100,8 @@ variable "security_group_rules" {
     direction                 = "inbound"
     remote                    = "10.0.0.0/8"
     tcp = {
-      port_min = 1
-      port_max = 65535
+      port_min = 8080
+      port_max = 8080
     }
   }]
 

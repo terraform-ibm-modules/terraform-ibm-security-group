@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-security-group"
+  default     = "test-sgr"
 }
 
 variable "vpc_name" {
