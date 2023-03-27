@@ -1,5 +1,5 @@
 resource "ibm_is_security_group_rule" "default_vpc_rule" {
-  for_each  = local.all_rules
+  for_each  = local.all_rules_map
   group     = var.security_group_id
   direction = each.value.direction
   remote    = each.value.remote
@@ -143,36 +143,25 @@ locals {
     }
   ]
 
-  # create a map for internal IBM IPs
-  ibm_cloud_internal_rules_object = {
-    for rule in local.ibm_cloud_internal_rules :
-    rule.name => rule
+  # merge internal and customer provide sg rules depending on add_ibm_cloud_internal_rules
+  # this creates a map with customer security group name as key and all merged rules are value
+  all_rules = {
+    for sec_rule in local.security_group_rule_object :
+    sec_rule.name => concat(
+      [
+        for rule in local.ibm_cloud_internal_rules :
+        rule if sec_rule.add_ibm_cloud_internal_rules == true
+      ],
+      [sec_rule]
+    )
   }
 
-  # merge internal and customer provide sg rules depending on add_ibm_cloud_internal_rules
-  all_rules = merge(
-    local.ibm_cloud_internal_rules_object,
-    # if add_ibm_cloud_internal_rules = true,
-    # return new merged rule from both ibm_cloud_internal_rules_object and security_group_rule_object
-    # else return rule from security_group_rule_object
-    { for name, rule in local.security_group_rule_object :
-      name => rule.add_ibm_cloud_internal_rules ?
-      merge(
-        try(local.ibm_cloud_internal_rules_object[name], {}),
-        { name      = rule.name,
-          direction = rule.direction,
-          remote    = rule.remote,
-          tcp       = rule.tcp,
-          udp       = rule.udp,
-          icmp      = rule.icmp
-        }
-        ) : {
-        name      = rule.name,
-        direction = rule.direction,
-        remote    = rule.remote,
-        tcp       = rule.tcp,
-        udp       = rule.udp,
-        icmp      = rule.icmp,
-      }
-  })
+  # extract merged rules and
+  # create a map with rule name as key and rule as value
+  all_rules_map = {
+    for rule in flatten([
+      for key, value in local.all_rules : value
+    ]) :
+    rule.name => rule
+  }
 }
