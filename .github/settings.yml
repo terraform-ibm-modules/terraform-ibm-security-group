@@ -22,4 +22,4 @@ repository:
 
   # Uncomment this description property
   # and update the description to the current repo description.
-  description: "Creates security group rules in the default vpc security group"
+  description: "Creates a security group, with option to add rules for internal IBM Cloud flows"

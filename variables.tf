@@ -6,11 +6,10 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      add_ibm_internal_sg_rules = optional(bool)
-      prepend_ibm_rules         = optional(bool)
-      name                      = string
-      direction                 = string
-      remote                    = string
+      add_ibm_cloud_internal_rules = optional(bool)
+      name                         = string
+      direction                    = string
+      remote                       = string
       tcp = optional(
         object({
           port_max = optional(number)

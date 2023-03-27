@@ -11,13 +11,13 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 37
+        "line": 36
       },
       "immutable": true
     },
     "security_group_rules": {
       "name": "security_group_rules",
-      "type": "list(\n    object({\n      add_ibm_internal_sg_rules = optional(bool)\n      prepend_ibm_rules         = optional(bool)\n      name                      = string\n      direction                 = string\n      remote                    = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
+      "type": "list(\n    object({\n      add_ibm_cloud_internal_rules = optional(bool)\n      name                         = string\n      direction                    = string\n      remote                       = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
       "description": "A list of security group rules to be added to the default vpc security group",
       "default": [],
       "pos": {

@@ -4,9 +4,9 @@
 ##############################################################################
 
 resource "ibm_resource_group" "resource_group" {
-  count    = var.resource_group != null ? 0 : 1
-  name     = "${var.prefix}-rg"
-  quota_id = null
+  count = var.resource_group != null ? 0 : 1
+  name  = "${var.prefix}-rg"
+
 }
 
 data "ibm_resource_group" "existing_resource_group" {

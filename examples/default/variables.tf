@@ -68,9 +68,10 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      name      = string
-      direction = string
-      remote    = string
+      add_ibm_cloud_internal_rules = optional(bool)
+      name                         = string
+      direction                    = string
+      remote                       = string
       tcp = optional(
         object({
           port_max = optional(number)
@@ -92,9 +93,10 @@ variable "security_group_rules" {
     })
   )
   default = [{
-    name      = "default-sgr"
-    direction = "inbound"
-    remote    = "10.0.0.0/8"
+    add_ibm_cloud_internal_rules = true
+    name                         = "default-sgr"
+    direction                    = "inbound"
+    remote                       = "10.0.0.0/8"
   }]
 
   validation {

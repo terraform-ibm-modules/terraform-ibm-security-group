@@ -1,5 +1,5 @@
 resource "ibm_is_security_group_rule" "default_vpc_rule" {
-  for_each  = local.security_group_rule_object
+  for_each  = local.all_rules
   group     = var.security_group_id
   direction = each.value.direction
   remote    = each.value.remote
@@ -106,4 +106,73 @@ locals {
     for rule in var.security_group_rules :
     rule.name => rule
   }
+
+  # IaaS and PaaS Rules
+  ibm_cloud_internal_rules = [
+    {
+      name      = "ibmflow-iaas-outbound"
+      direction = "outbound"
+      remote    = "161.26.0.0/16"
+      tcp       = null
+      udp       = null
+      icmp      = null
+    },
+    {
+      name      = "ibmflow-iaas-inbound"
+      direction = "inbound"
+      remote    = "161.26.0.0/16"
+      tcp       = null
+      udp       = null
+      icmp      = null
+    },
+    {
+      name      = "ibmflow-paas-outbound"
+      direction = "outbound"
+      remote    = "166.8.0.0/14"
+      tcp       = null
+      udp       = null
+      icmp      = null
+    },
+    {
+      name      = "ibmflow-paas-inbound"
+      direction = "inbound"
+      remote    = "166.8.0.0/14"
+      tcp       = null
+      udp       = null
+      icmp      = null
+    }
+  ]
+
+  # create a map for internal IBM IPs
+  ibm_cloud_internal_rules_object = {
+    for rule in local.ibm_cloud_internal_rules :
+    rule.name => rule
+  }
+
+  # merge internal and customer provide sg rules depending on add_ibm_cloud_internal_rules
+  all_rules = merge(
+    local.ibm_cloud_internal_rules_object,
+    # if add_ibm_cloud_internal_rules = true,
+    # return new merged rule from both ibm_cloud_internal_rules_object and security_group_rule_object
+    # else return rule from security_group_rule_object
+    { for name, rule in local.security_group_rule_object :
+      name => rule.add_ibm_cloud_internal_rules ?
+      merge(
+        try(local.ibm_cloud_internal_rules_object[name], {}),
+        { name      = rule.name,
+          direction = rule.direction,
+          remote    = rule.remote,
+          tcp       = rule.tcp,
+          udp       = rule.udp,
+          icmp      = rule.icmp
+        }
+        ) : {
+        name      = rule.name,
+        direction = rule.direction,
+        remote    = rule.remote,
+        tcp       = rule.tcp,
+        udp       = rule.udp,
+        icmp      = rule.icmp,
+      }
+  })
 }
