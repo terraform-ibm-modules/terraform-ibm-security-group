@@ -1,23 +1,23 @@
 <!-- BEGIN MODULE HOOK -->
 
 <!-- Update the title to match the module name and add a description -->
-# IBM Security Group Module
+# IBM Security Group module
 <!-- UPDATE BADGE: Update the link for the following badge-->
 [![Incubating (Not yet consumable)](https://img.shields.io/badge/status-Incubating%20(Not%20yet%20consumable)-red)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
-[![Build status](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/actions/workflows/ci.yml)
+[![Build status](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/actions/workflows/ci.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-module-template?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/releases/latest)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-This module enables to create the following
- - Create your own security rule the default security group in a VPC
- - Create your own security group and security group rule
- - Add internal IBM IPs to your security group rules
+With this module you can create the following infrastructure:
+- A security rule in the the default security group in a VPC
+- Other security groups and rules
+- Internal IBM IPs that are added to the security group rules
 
 ## Usage
 
-```
+```hcl
 module "create_sgr_rule" {
   source               = "git::https://github.com/terraform-ibm-modules/terraform-ibm-security-group"
   security_group_rules = [{
