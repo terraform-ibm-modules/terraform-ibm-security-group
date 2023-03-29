@@ -61,9 +61,9 @@ variable "security_group_rules" {
   )
   default = [{
     add_ibm_cloud_internal_rules = false
-    name                         = "default-sgr"
+    name                         = "allow-all-inbound"
     direction                    = "inbound"
-    remote                       = "10.0.0.0/8"
+    remote                       = "0.0.0.0/0"
   }]
 
   validation {
@@ -91,10 +91,10 @@ variable "security_group_rules" {
   }
 }
 
-variable "create_security_group" {
-  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
-  type        = bool
-  default     = true
+variable "security_group_id" {
+  description = "ID of the security group to which the rules are to be attached"
+  type        = string
+  default     = null
 }
 
 # VPC variables

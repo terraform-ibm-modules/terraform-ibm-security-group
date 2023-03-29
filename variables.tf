@@ -39,12 +39,6 @@ variable "security_group_id" {
   default     = null
 }
 
-variable "create_security_group" {
-  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
-  type        = bool
-  default     = false
-}
-
 variable "sg_name" {
   description = "Name of the security group"
   type        = string
@@ -64,7 +58,7 @@ variable "resource_group" {
 }
 
 variable "target_ids" {
-  description = "(Optional) A list of target identifiers to be added to security group"
-  type        = list(any)
+  description = "(Optional) A list of target identifiers. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server"
+  type        = list(string)
   default     = []
 }

@@ -94,9 +94,9 @@ variable "security_group_rules" {
   )
   default = [{
     add_ibm_cloud_internal_rules = true
-    name                         = "default-sgr"
+    name                         = "allow-all-inbound"
     direction                    = "inbound"
-    remote                       = "10.0.0.0/8"
+    remote                       = "0.0.0.0/0"
   }]
 
   validation {
@@ -122,10 +122,4 @@ variable "security_group_rules" {
       ])
     )) == 0
   }
-}
-
-variable "create_security_group" {
-  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
-  type        = bool
-  default     = false
 }

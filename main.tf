@@ -3,7 +3,7 @@
 ############################################################################
 
 resource "ibm_is_security_group" "sg" {
-  count          = var.create_security_group ? 1 : 0
+  count          = var.security_group_id != null ? 0 : 1
   name           = var.sg_name
   vpc            = var.vpc_id
   resource_group = var.resource_group
@@ -15,7 +15,7 @@ resource "ibm_is_security_group" "sg" {
 
 resource "ibm_is_security_group_target" "sg_target" {
   count          = length(var.target_ids)
-  security_group = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
+  security_group = var.security_group_id == null ? ibm_is_security_group.sg[0].id : var.security_group_id
   target         = var.target_ids[count.index]
 }
 
@@ -23,9 +23,9 @@ resource "ibm_is_security_group_target" "sg_target" {
 # Security Group Rule
 #############################################################################
 
-resource "ibm_is_security_group_rule" "default_vpc_rule" {
+resource "ibm_is_security_group_rule" "security_group_rule" {
   for_each  = local.all_rules_map
-  group     = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
+  group     = var.security_group_id == null ? ibm_is_security_group.sg[0].id : var.security_group_id
   direction = each.value.direction
   remote    = each.value.remote
 

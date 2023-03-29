@@ -9,5 +9,5 @@ output "security_target" {
 
 output "security_group_rule" {
   description = "Security group rules"
-  value       = ibm_is_security_group_rule.default_vpc_rule
+  value       = ibm_is_security_group_rule.security_group_rule
 }

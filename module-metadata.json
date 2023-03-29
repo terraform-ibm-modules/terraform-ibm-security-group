@@ -1,26 +1,6 @@
 {
   "path": ".",
   "variables": {
-    "create_security_group": {
-      "name": "create_security_group",
-      "type": "bool",
-      "description": "True to create new security group. False if security group is already existing and security group rules are to be added",
-      "default": false,
-      "required": true,
-      "source": [
-        "ibm_is_security_group.sg.count",
-        "ibm_is_security_group_rule.default_vpc_rule.group",
-        "ibm_is_security_group_target.sg_target.security_group"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 42
-      },
-      "immutable": true,
-      "min_length": 1,
-      "max_length": 64,
-      "matches": "^[-0-9a-z_]+$"
-    },
     "resource_group": {
       "name": "resource_group",
       "type": "string",
@@ -30,7 +10,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 60
+        "line": 54
       },
       "cloud_data_type": "resource_group",
       "immutable": true,
@@ -40,10 +20,20 @@
       "name": "security_group_id",
       "type": "string",
       "description": "ID of the security group to which the rules are to be attached",
+      "required": true,
+      "source": [
+        "ibm_is_security_group.sg.count",
+        "ibm_is_security_group_rule.security_group_rule.group",
+        "ibm_is_security_group_target.sg_target.security_group"
+      ],
       "pos": {
         "filename": "variables.tf",
         "line": 36
-      }
+      },
+      "immutable": true,
+      "min_length": 1,
+      "max_length": 64,
+      "matches": "^[-0-9a-z_]+$"
     },
     "security_group_rules": {
       "name": "security_group_rules",
@@ -65,7 +55,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 48
+        "line": 42
       },
       "min_length": 1,
       "max_length": 63,
@@ -74,17 +64,22 @@
     },
     "target_ids": {
       "name": "target_ids",
-      "type": "list(any)",
-      "description": "(Optional) A list of target identifiers to be added to security group",
+      "type": "list(string)",
+      "description": "(Optional) A list of target identifiers. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server",
       "default": [],
+      "required": true,
       "source": [
         "ibm_is_security_group_target.sg_target.count",
         "ibm_is_security_group_target.sg_target.target"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 66
-      }
+        "line": 60
+      },
+      "immutable": true,
+      "min_length": 1,
+      "max_length": 64,
+      "matches": "^[-0-9a-z_]+$"
     },
     "vpc_id": {
       "name": "vpc_id",
@@ -96,7 +91,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 54
+        "line": 48
       },
       "immutable": true
     }
@@ -105,7 +100,7 @@
     "security_group_rule": {
       "name": "security_group_rule",
       "description": "Security group rules",
-      "value": "ibm_is_security_group_rule.default_vpc_rule",
+      "value": "ibm_is_security_group_rule.security_group_rule",
       "pos": {
         "filename": "outputs.tf",
         "line": 10
@@ -138,7 +133,7 @@
       "type": "ibm_is_security_group",
       "name": "sg",
       "attributes": {
-        "count": "create_security_group",
+        "count": "security_group_id",
         "name": "sg_name",
         "resource_group": "resource_group",
         "vpc": "vpc_id"
@@ -151,12 +146,12 @@
         "line": 5
       }
     },
-    "ibm_is_security_group_rule.default_vpc_rule": {
+    "ibm_is_security_group_rule.security_group_rule": {
       "mode": "managed",
       "type": "ibm_is_security_group_rule",
-      "name": "default_vpc_rule",
+      "name": "security_group_rule",
       "attributes": {
-        "group": "create_security_group"
+        "group": "security_group_id"
       },
       "provider": {
         "name": "ibm"
@@ -172,7 +167,7 @@
       "name": "sg_target",
       "attributes": {
         "count": "target_ids",
-        "security_group": "create_security_group",
+        "security_group": "security_group_id",
         "target": "target_ids"
       },
       "provider": {
