@@ -94,7 +94,7 @@ variable "security_group_rules" {
   )
   default = [{
     add_ibm_cloud_internal_rules = true
-    name                         = "default-complete-sgr-tcp"
+    name                         = "sgr-tcp"
     direction                    = "inbound"
     remote                       = "0.0.0.0/0"
     tcp = {
@@ -103,7 +103,7 @@ variable "security_group_rules" {
     }
     }, {
     add_ibm_cloud_internal_rules = true
-    name                         = "default-complete-sgr-udp"
+    name                         = "sgr-udp"
     direction                    = "inbound"
     remote                       = "0.0.0.0/0"
     udp = {
@@ -113,7 +113,7 @@ variable "security_group_rules" {
     },
     {
       add_ibm_cloud_internal_rules = true
-      name                         = "default-complete-sgr-icmp"
+      name                         = "sgr-icmp"
       direction                    = "inbound"
       remote                       = "0.0.0.0/0"
       icmp = {
@@ -148,8 +148,8 @@ variable "security_group_rules" {
   }
 }
 
-variable "security_group_id" {
-  description = "ID of the security group to which the rules are to be attached"
-  type        = string
-  default     = null
+variable "create_security_group" {
+  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
+  type        = bool
+  default     = true
 }

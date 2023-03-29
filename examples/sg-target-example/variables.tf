@@ -91,10 +91,10 @@ variable "security_group_rules" {
   }
 }
 
-variable "security_group_id" {
-  description = "ID of the security group to which the rules are to be attached"
-  type        = string
-  default     = null
+variable "create_security_group" {
+  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
+  type        = bool
+  default     = true
 }
 
 # VPC variables

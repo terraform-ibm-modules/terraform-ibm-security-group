@@ -41,8 +41,9 @@ data "ibm_is_vpc" "existing_vpc" {
 ##############################################################################
 
 module "create_sgr_rule" {
-  source               = "../.."
-  security_group_rules = var.security_group_rules
-  security_group_id    = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].default_security_group : ibm_is_vpc.vpc[0].default_security_group
-  vpc_id               = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
+  source                = "../.."
+  security_group_rules  = var.security_group_rules
+  create_security_group = var.create_security_group
+  security_group_id     = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].default_security_group : ibm_is_vpc.vpc[0].default_security_group
+  vpc_id                = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
 }

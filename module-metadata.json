@@ -1,6 +1,26 @@
 {
   "path": ".",
   "variables": {
+    "create_security_group": {
+      "name": "create_security_group",
+      "type": "bool",
+      "description": "True to create new security group. False if security group is already existing and security group rules are to be added",
+      "default": false,
+      "required": true,
+      "source": [
+        "ibm_is_security_group.sg.count",
+        "ibm_is_security_group_rule.security_group_rule.group",
+        "ibm_is_security_group_target.sg_target.security_group"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 66
+      },
+      "immutable": true,
+      "min_length": 1,
+      "max_length": 64,
+      "matches": "^[-0-9a-z_]+$"
+    },
     "resource_group": {
       "name": "resource_group",
       "type": "string",
@@ -20,20 +40,10 @@
       "name": "security_group_id",
       "type": "string",
       "description": "ID of the security group to which the rules are to be attached",
-      "required": true,
-      "source": [
-        "ibm_is_security_group.sg.count",
-        "ibm_is_security_group_rule.security_group_rule.group",
-        "ibm_is_security_group_target.sg_target.security_group"
-      ],
       "pos": {
         "filename": "variables.tf",
         "line": 36
-      },
-      "immutable": true,
-      "min_length": 1,
-      "max_length": 64,
-      "matches": "^[-0-9a-z_]+$"
+      }
     },
     "security_group_rules": {
       "name": "security_group_rules",
@@ -133,7 +143,7 @@
       "type": "ibm_is_security_group",
       "name": "sg",
       "attributes": {
-        "count": "security_group_id",
+        "count": "create_security_group",
         "name": "sg_name",
         "resource_group": "resource_group",
         "vpc": "vpc_id"
@@ -151,7 +161,7 @@
       "type": "ibm_is_security_group_rule",
       "name": "security_group_rule",
       "attributes": {
-        "group": "security_group_id"
+        "group": "create_security_group"
       },
       "provider": {
         "name": "ibm"
@@ -167,7 +177,7 @@
       "name": "sg_target",
       "attributes": {
         "count": "target_ids",
-        "security_group": "security_group_id",
+        "security_group": "create_security_group",
         "target": "target_ids"
       },
       "provider": {
