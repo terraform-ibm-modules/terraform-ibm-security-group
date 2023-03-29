@@ -22,4 +22,4 @@ repository:
 
   # Uncomment this description property
   # and update the description to the current repo description.
-  description: "Creates a security group, with option to add rules for internal IBM Cloud flows"
+  description: "Creates a security group with the option to add rules for internal IBM Cloud flows"
