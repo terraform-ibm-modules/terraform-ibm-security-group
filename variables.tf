@@ -38,3 +38,33 @@ variable "security_group_id" {
   type        = string
   default     = null
 }
+
+variable "create_security_group" {
+  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
+  type        = bool
+  default     = false
+}
+
+variable "sg_name" {
+  description = "Name of the security group"
+  type        = string
+  default     = "test-sg"
+}
+
+variable "vpc_id" {
+  description = "ID of the VPC to create security group"
+  type        = string
+  default     = null
+}
+
+variable "resource_group" {
+  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
+  type        = string
+  default     = null
+}
+
+variable "target_ids" {
+  description = "(Optional) A list of target identifiers to be added to security group"
+  type        = list(any)
+  default     = []
+}

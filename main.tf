@@ -1,6 +1,31 @@
+############################################################################
+# Security Group
+############################################################################
+
+resource "ibm_is_security_group" "sg" {
+  count          = var.create_security_group ? 1 : 0
+  name           = var.sg_name
+  vpc            = var.vpc_id
+  resource_group = var.resource_group
+}
+
+#############################################################################
+# Security Group Target
+#############################################################################
+
+resource "ibm_is_security_group_target" "sg_target" {
+  count          = length(var.target_ids)
+  security_group = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
+  target         = var.target_ids[count.index]
+}
+
+#############################################################################
+# Security Group Rule
+#############################################################################
+
 resource "ibm_is_security_group_rule" "default_vpc_rule" {
   for_each  = local.all_rules_map
-  group     = var.security_group_id
+  group     = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
   direction = each.value.direction
   remote    = each.value.remote
 
@@ -107,6 +132,11 @@ locals {
     rule.name => rule
   }
 
+  ibm_cloud_internal_rules_object = {
+    for rule in local.ibm_cloud_internal_rules :
+    rule.name => rule
+  }
+
   # IaaS and PaaS Rules
   ibm_cloud_internal_rules = [
     {
@@ -148,20 +178,31 @@ locals {
   all_rules = {
     for sec_rule in local.security_group_rule_object :
     sec_rule.name => concat(
+      # These rules cannot be added in a conditional operator due to inconsistent typing
+      # This will add all internal rules if the security group object has add_ibm_cloud_internal_rules set to true
       [
-        for rule in local.ibm_cloud_internal_rules :
+        for rule in local.ibm_cloud_internal_rules_object :
         rule if sec_rule.add_ibm_cloud_internal_rules == true
       ],
       [sec_rule]
     )
   }
 
+  # extract distinct rules as add_ibm_cloud_internal_rules = true for every object in sg object may contain duplicates
+  all_rules_values = distinct([for v in flatten(values(local.all_rules)) :
+    merge({
+      direction = v.direction, remote = v.remote, name = v.name,
+      icmp      = v.icmp == null ? null : { code = v.icmp.code, type = v.icmp.type }
+      tcp       = v.tcp == null ? null : { port_min = v.tcp.port_min, port_max = v.tcp.port_max }
+      udp       = v.udp == null ? null : { port_min = v.udp.port_min, port_max = v.udp.port_max }
+
+    })
+  ])
+
   # extract merged rules and
   # create a map with rule name as key and rule as value
   all_rules_map = {
-    for rule in flatten([
-      for key, value in local.all_rules : value
-    ]) :
+    for rule in local.all_rules_values :
     rule.name => rule
   }
 }

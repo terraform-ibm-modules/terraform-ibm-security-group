@@ -9,7 +9,7 @@ output "resource_group" {
 
 output "vpc" {
   description = "VPC where the security group rules are created"
-  value       = var.vpc_name != null ? data.ibm_is_vpc.existing_vpc[0] : ibm_is_vpc.vpc[0]
+  value       = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0] : ibm_is_vpc.vpc[0]
 }
 
 output "security_group_rules" {

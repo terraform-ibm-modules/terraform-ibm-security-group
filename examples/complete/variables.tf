@@ -16,22 +16,52 @@ variable "prefix" {
   default     = "test-sgr"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "ID of the VPC"
-}
-
 variable "resource_group" {
   type        = string
   description = "An existing resource group name to use for this example, if unset a new resource group will be created"
   default     = null
 }
 
-
-variable "sg_name" {
-  description = "Name of the security group"
+variable "vpc_id" {
   type        = string
-  default     = "test-sg"
+  description = "ID of the VPC"
+  default     = null
+}
+
+variable "resource_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to created resources"
+  default     = []
+}
+
+variable "classic_access" {
+  description = "OPTIONAL - Classic Access to the VPC"
+  type        = bool
+  default     = false
+}
+
+variable "use_manual_address_prefixes" {
+  description = "OPTIONAL - Use manual address prefixes for VPC"
+  type        = bool
+  default     = false
+}
+
+variable "default_network_acl_name" {
+  description = "OPTIONAL - Name of the Default ACL. If null, a name will be automatically generated"
+  type        = string
+  default     = null
+}
+
+variable "default_security_group_name" {
+  description = "OPTIONAL - Name of the Default Security Group. If null, a name will be automatically generated"
+  type        = string
+  default     = null
+}
+
+variable "default_routing_table_name" {
+  description = "OPTIONAL - Name of the Default Routing Table. If null, a name will be automatically generated"
+  type        = string
+  default     = null
 }
 
 variable "security_group_rules" {
@@ -63,10 +93,34 @@ variable "security_group_rules" {
     })
   )
   default = [{
-    add_ibm_cloud_internal_rules = false
-    name                         = "default-sgr"
+    add_ibm_cloud_internal_rules = true
+    name                         = "default-complete-sgr-tcp"
     direction                    = "inbound"
     remote                       = "10.0.0.0/8"
+    tcp = {
+      port_min = 8080
+      port_max = 8080
+    }
+    }, {
+    add_ibm_cloud_internal_rules = true
+    name                         = "default-complete-sgr-udp"
+    direction                    = "inbound"
+    remote                       = "10.0.0.0/8"
+    udp = {
+      port_min = 805
+      port_max = 807
+    }
+    },
+    {
+      add_ibm_cloud_internal_rules = true
+      name                         = "default-complete-sgr-icmp"
+      direction                    = "inbound"
+      remote                       = "10.0.0.0/8"
+      icmp = {
+        code = 20
+        type = 30
+      }
+
   }]
 
   validation {
@@ -92,12 +146,6 @@ variable "security_group_rules" {
       ])
     )) == 0
   }
-}
-
-variable "security_group_id" {
-  description = "ID of the default security group to which the rules are to be attached"
-  type        = string
-  default     = null
 }
 
 variable "create_security_group" {

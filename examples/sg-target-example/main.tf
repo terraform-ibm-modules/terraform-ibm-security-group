@@ -14,7 +14,6 @@ data "ibm_resource_group" "existing_resource_group" {
   name  = var.resource_group
 }
 
-
 ##############################################################################
 # Create new VPC
 # (if var.vpc_id is null, create a new VPCs using var.prefix)
@@ -38,6 +37,40 @@ data "ibm_is_vpc" "existing_vpc" {
 }
 
 ##############################################################################
+# Create VPC routing table
+##############################################################################
+
+resource "ibm_is_vpc_routing_table" "rt" {
+  name = "${var.prefix}-routing-table"
+  vpc  = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
+}
+
+##############################################################################
+# Create subnet
+##############################################################################
+
+resource "ibm_is_subnet" "subnet" {
+  name            = "${var.prefix}-subnet"
+  vpc             = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
+  zone            = var.zone
+  ipv4_cidr_block = var.ipv4_cidr_block
+  routing_table   = ibm_is_vpc_routing_table.rt.routing_table
+  ip_version      = var.ip_version
+  access_tags     = var.access_tags
+  resource_group  = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+}
+
+##############################################################################
+# Create application load balancer
+##############################################################################
+
+resource "ibm_is_lb" "sg_lb" {
+  name        = "${var.prefix}-load-balancer"
+  subnets     = [ibm_is_subnet.subnet.id]
+  access_tags = var.access_tags
+}
+
+##############################################################################
 # Update security group
 ##############################################################################
 
@@ -46,5 +79,6 @@ module "create_sgr_rule" {
   security_group_rules  = var.security_group_rules
   create_security_group = var.create_security_group
   resource_group        = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  target_ids            = flatten([ibm_is_lb.sg_lb.id])
   vpc_id                = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
 }

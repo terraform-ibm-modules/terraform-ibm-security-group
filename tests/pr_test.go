@@ -11,7 +11,6 @@ import (
 // Use existing resource group
 const resourceGroup = "geretain-test-resources"
 const defaultExampleTerraformDir = "examples/default"
-const completeExampleTerraformDir = "examples/complete"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
