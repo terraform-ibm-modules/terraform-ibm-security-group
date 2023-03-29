@@ -17,24 +17,17 @@ data "ibm_resource_group" "existing_resource_group" {
 
 ##############################################################################
 # Create new VPC
-# (if var.vpc_id is null, create a new VPCs using var.prefix)
+# (if var.vpc_id is null, create a new VPC)
 ##############################################################################
 
-resource "ibm_is_vpc" "vpc" {
-  count                       = var.vpc_id != null ? 0 : 1
-  name                        = "${var.prefix}-vpc"
-  resource_group              = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
-  classic_access              = var.classic_access
-  address_prefix_management   = var.use_manual_address_prefixes == false ? null : "manual"
-  default_network_acl_name    = var.default_network_acl_name
-  default_security_group_name = var.default_security_group_name
-  default_routing_table_name  = var.default_routing_table_name
-  tags                        = var.resource_tags
-}
-
-data "ibm_is_vpc" "existing_vpc" {
-  count = var.vpc_id != null ? 1 : 0
-  name  = var.vpc_id
+module "vpc" {
+  count             = var.vpc_id != null ? 0 : 1
+  source            = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc.git?ref=v5.0.1"
+  resource_group_id = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  region            = var.region
+  prefix            = var.prefix
+  name              = var.vpc_name
+  tags              = var.resource_tags
 }
 
 ##############################################################################
@@ -46,5 +39,5 @@ module "create_sgr_rule" {
   security_group_rules  = var.security_group_rules
   create_security_group = var.create_security_group
   resource_group        = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
-  vpc_id                = var.vpc_id != null ? data.ibm_is_vpc.existing_vpc[0].id : ibm_is_vpc.vpc[0].id
+  vpc_id                = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
 }

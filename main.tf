@@ -4,7 +4,7 @@
 
 resource "ibm_is_security_group" "sg" {
   count          = var.create_security_group ? 1 : 0
-  name           = var.sg_name
+  name           = var.security_group_name
   vpc            = var.vpc_id
   resource_group = var.resource_group
 }
@@ -127,6 +127,10 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
 }
 
 locals {
+
+  # tflint-ignore: terraform_unused_declarations
+  validate_vpc_id = var.create_security_group && var.vpc_id == null ? tobool("VPC ID is required when creating a new security group") : true
+
   security_group_rule_object = {
     for rule in var.security_group_rules :
     rule.name => rule

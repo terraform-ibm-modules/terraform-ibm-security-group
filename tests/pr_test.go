@@ -11,6 +11,8 @@ import (
 // Use existing resource group
 const resourceGroup = "geretain-test-resources"
 const defaultExampleTerraformDir = "examples/default"
+const completeExampleTerraformDir = "examples/complete"
+const sgTargetExampleTerraformDir = "examples/sg-target-example"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
@@ -20,6 +22,39 @@ func TestRunDefaultExample(t *testing.T) {
 		TerraformDir:  defaultExampleTerraformDir,
 		Prefix:        "test-sgr-default",
 		ResourceGroup: resourceGroup,
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunCompleteExample(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  completeExampleTerraformDir,
+		Prefix:        "test-sgr-complete",
+		ResourceGroup: resourceGroup,
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunSGTargetExample(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  sgTargetExampleTerraformDir,
+		Prefix:        "test-sgr-target",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"region": "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+		},
 	})
 
 	output, err := options.RunTestConsistency()

@@ -3,7 +3,7 @@
 <!-- Update the title to match the module name and add a description -->
 # IBM Security Group module
 <!-- UPDATE BADGE: Update the link for the following badge-->
-[![Incubating (Not yet consumable)](https://img.shields.io/badge/status-Incubating%20(Not%20yet%20consumable)-red)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
+[![Stable (With quality checks)](https://img.shields.io/badge/Status-Stable%20(With%20quality%20checks)-green)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
 [![Build status](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/actions/workflows/ci.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-module-template?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/releases/latest)
@@ -72,10 +72,10 @@ No modules.
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | True to create new security group. False if security group is already existing and security group rules are to be added | `bool` | `false` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | An existing resource group name to use for this example, if unset a new resource group will be created | `string` | `null` | no |
 | <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | ID of the security group to which the rules are to be attached | `string` | `null` | no |
+| <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group to be created | `string` | `"test-sg"` | no |
 | <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br>    object({<br>      add_ibm_cloud_internal_rules = optional(bool)<br>      name                         = string<br>      direction                    = string<br>      remote                       = string<br>      tcp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      udp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      icmp = optional(<br>        object({<br>          type = optional(number)<br>          code = optional(number)<br>        })<br>      )<br>    })<br>  )</pre> | `[]` | no |
-| <a name="input_sg_name"></a> [sg\_name](#input\_sg\_name) | Name of the security group | `string` | `"test-sg"` | no |
-| <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC to create security group | `string` | `null` | no |
+| <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC to create security group. Only required if 'create\_security\_group' is true | `string` | `null` | no |
 
 ## Outputs
 

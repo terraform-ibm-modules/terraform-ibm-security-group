@@ -15,25 +15,19 @@ data "ibm_resource_group" "existing_resource_group" {
 
 ##############################################################################
 # Create new VPC
-# (if var.vpc_id is null, create a new VPCs using var.prefix)
+# (if var.vpc_id is null, create a new VPC)
 ##############################################################################
 
 resource "ibm_is_vpc" "vpc" {
-  count                       = var.vpc_id != null ? 0 : 1
-  name                        = "${var.prefix}-vpc"
-  resource_group              = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
-  classic_access              = var.classic_access
-  address_prefix_management   = var.use_manual_address_prefixes == false ? null : "manual"
-  default_network_acl_name    = var.default_network_acl_name
-  default_security_group_name = var.default_security_group_name
-  default_routing_table_name  = var.default_routing_table_name
-  tags                        = var.resource_tags
+  count          = var.vpc_id != null ? 0 : 1
+  name           = "${var.prefix}-vpc"
+  resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  tags           = var.resource_tags
 }
 
 data "ibm_is_vpc" "existing_vpc" {
   count = var.vpc_id != null ? 1 : 0
   name  = var.vpc_id
-
 }
 
 ##############################################################################

@@ -24,12 +24,6 @@ variable "resource_group" {
   default     = null
 }
 
-variable "access_tags" {
-  type        = list(string)
-  description = "(Optional) A list of access management tags to attach to the load balancer."
-  default     = []
-}
-
 # Security group rule variables
 variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
@@ -104,40 +98,10 @@ variable "vpc_id" {
   default     = null
 }
 
-variable "resource_tags" {
-  type        = list(string)
-  description = "Optional list of tags to be added to created resources"
-  default     = []
-}
-
-variable "classic_access" {
-  description = "OPTIONAL - Classic Access to the VPC"
-  type        = bool
-  default     = false
-}
-
-variable "use_manual_address_prefixes" {
-  description = "OPTIONAL - Use manual address prefixes for VPC"
-  type        = bool
-  default     = false
-}
-
-variable "default_network_acl_name" {
-  description = "OPTIONAL - Name of the Default ACL. If null, a name will be automatically generated"
+variable "vpc_name" {
   type        = string
-  default     = null
-}
-
-variable "default_security_group_name" {
-  description = "OPTIONAL - Name of the Default Security Group. If null, a name will be automatically generated"
-  type        = string
-  default     = null
-}
-
-variable "default_routing_table_name" {
-  description = "OPTIONAL - Name of the Default Routing Table. If null, a name will be automatically generated"
-  type        = string
-  default     = null
+  description = "Name of the VPC to be created"
+  default     = "vpc"
 }
 
 # Subnet variables
@@ -147,15 +111,14 @@ variable "zone" {
   default     = "us-south-1"
 }
 
-variable "ipv4_cidr_block" {
-  type        = string
+variable "total_ipv4_address_count" {
+  type        = number
   description = "(Optional) The IPv4 range of the subnet. Either ipv4_cidr_block or total_ipv4_address_count input must be provided in the resource"
-  default     = "10.240.0.0/24"
+  default     = 256
 }
 
-
-variable "ip_version" {
-  type        = string
-  description = "(Optional) The IPv4 range of the subnet"
-  default     = "ipv4"
+variable "resource_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to created resources"
+  default     = []
 }

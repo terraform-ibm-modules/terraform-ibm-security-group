@@ -39,14 +39,14 @@ variable "security_group_id" {
   default     = null
 }
 
-variable "sg_name" {
-  description = "Name of the security group"
+variable "security_group_name" {
+  description = "Name of the security group to be created"
   type        = string
   default     = "test-sg"
 }
 
 variable "vpc_id" {
-  description = "ID of the VPC to create security group"
+  description = "ID of the VPC to create security group. Only required if 'create_security_group' is true"
   type        = string
   default     = null
 }
@@ -58,7 +58,7 @@ variable "resource_group" {
 }
 
 variable "target_ids" {
-  description = "(Optional) A list of target identifiers. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server"
+  description = "(Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server"
   type        = list(string)
   default     = []
 }

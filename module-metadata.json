@@ -45,20 +45,10 @@
         "line": 36
       }
     },
-    "security_group_rules": {
-      "name": "security_group_rules",
-      "type": "list(\n    object({\n      add_ibm_cloud_internal_rules = optional(bool)\n      name                         = string\n      direction                    = string\n      remote                       = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
-      "description": "A list of security group rules to be added to the default vpc security group",
-      "default": [],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 5
-      }
-    },
-    "sg_name": {
-      "name": "sg_name",
+    "security_group_name": {
+      "name": "security_group_name",
       "type": "string",
-      "description": "Name of the security group",
+      "description": "Name of the security group to be created",
       "default": "test-sg",
       "source": [
         "ibm_is_security_group.sg.name"
@@ -72,10 +62,20 @@
       "matches": "^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$",
       "computed": true
     },
+    "security_group_rules": {
+      "name": "security_group_rules",
+      "type": "list(\n    object({\n      add_ibm_cloud_internal_rules = optional(bool)\n      name                         = string\n      direction                    = string\n      remote                       = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
+      "description": "A list of security group rules to be added to the default vpc security group",
+      "default": [],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      }
+    },
     "target_ids": {
       "name": "target_ids",
       "type": "list(string)",
-      "description": "(Optional) A list of target identifiers. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server",
+      "description": "(Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server",
       "default": [],
       "required": true,
       "source": [
@@ -94,7 +94,7 @@
     "vpc_id": {
       "name": "vpc_id",
       "type": "string",
-      "description": "ID of the VPC to create security group",
+      "description": "ID of the VPC to create security group. Only required if 'create_security_group' is true",
       "required": true,
       "source": [
         "ibm_is_security_group.sg.vpc"
@@ -144,7 +144,7 @@
       "name": "sg",
       "attributes": {
         "count": "create_security_group",
-        "name": "sg_name",
+        "name": "security_group_name",
         "resource_group": "resource_group",
         "vpc": "vpc_id"
       },
