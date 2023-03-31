@@ -1,7 +1,7 @@
 <!-- BEGIN MODULE HOOK -->
 
 <!-- Update the title to match the module name and add a description -->
-# IBM Security Group module
+# IBM Security Group for VPC module
 <!-- UPDATE BADGE: Update the link for the following badge-->
 [![Stable (With quality checks)](https://img.shields.io/badge/Status-Stable%20(With%20quality%20checks)-green)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
 [![Build status](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-security-group/actions/workflows/ci.yml)
@@ -10,11 +10,15 @@
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-With this module you can create the following infrastructure:
-- Add security rules to a new or existing security group
-- Optionally create a new security group
-- Optionally add a list of security rules corresponding to the internal IBM flows
-- Optionally attach a security group to one or several targets (network interface, VPC load balancer, virtual private endpoint gateways, VPC VPN servers)
+
+This module aims at providing support for most permutations of operations on [security groups for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-using-security-groups).
+
+This module supports the following scenarios. Refer to the [examples](#Examples) section for demonstration on these scenarios:
+- Create a new security group in a VPC
+- Create security group rules for a new or existing security group
+- Create pre-defined security group rules to cover the IBM Cloud internal CIDRs range ([Service Endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#cloud-service-endpoints) and [IaaS Endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#infrastructure-as-a-service-iaas-endpoints))
+- Attach a security group to one or several existing targets in the VPC (VSI network interface, VPC load balancer, Virtual Private Endpoint gateways, VPC VPN servers)
+
 
 ## Usage
 
