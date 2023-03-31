@@ -11,14 +11,15 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 
-This module aims at providing support for most permutations of operations on [security groups for VPC](https://cloud.ibm.com/docs/vpc?topic=vpc-using-security-groups).
+This module supports most operations on security groups for VPC. For more information, see [About security groups](https://cloud.ibm.com/docs/vpc?topic=vpc-using-security-groups) in the IBM Cloud Docs.
 
-This module supports the following scenarios. Refer to the [examples](#Examples) section for demonstration on these scenarios:
-- Create a new security group in a VPC
+The module supports the following scenarios:
+- Create a security group in a VPC
 - Create security group rules for a new or existing security group
-- Create pre-defined security group rules to cover the IBM Cloud internal CIDRs range ([Service Endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#cloud-service-endpoints) and [IaaS Endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#infrastructure-as-a-service-iaas-endpoints))
-- Attach a security group to one or several existing targets in the VPC (VSI network interface, VPC load balancer, Virtual Private Endpoint gateways, VPC VPN servers)
+- Create pre-defined security group rules to cover the range of IBM Cloud internal CIDRs for ([service endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#cloud-service-endpoints) and [IaaS endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#infrastructure-as-a-service-iaas-endpoints))
+- Attach a security group to one or more existing targets in the VPC (for example, VSI network interface, VPC load balancer, Virtual Private Endpoint gateways, VPC VPN servers)
 
+See the following [examples](#Examples) section for code that illustrates these scenarios.
 
 ## Usage
 
