@@ -1,20 +1,31 @@
 {
   "path": ".",
   "variables": {
-    "create_security_group": {
-      "name": "create_security_group",
+    "add_ibm_cloud_internal_rules": {
+      "name": "add_ibm_cloud_internal_rules",
       "type": "bool",
-      "description": "True to create new security group. False if security group is already existing and security group rules are to be added",
+      "description": "Add IBM cloud Internal rules to the provided security group rules",
       "default": false,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 89
+      }
+    },
+    "existing_security_group_name": {
+      "name": "existing_security_group_name",
+      "type": "string",
+      "description": "Name of the security group to be created",
       "required": true,
       "source": [
+        "data.ibm_is_security_group.existing_sg.count",
+        "data.ibm_is_security_group.existing_sg.name",
         "ibm_is_security_group.sg.count",
         "ibm_is_security_group_rule.security_group_rule.group",
         "ibm_is_security_group_target.sg_target.security_group"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 66
+        "line": 65
       },
       "immutable": true,
       "min_length": 1,
@@ -30,20 +41,11 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 54
+        "line": 77
       },
       "cloud_data_type": "resource_group",
       "immutable": true,
       "computed": true
-    },
-    "security_group_id": {
-      "name": "security_group_id",
-      "type": "string",
-      "description": "ID of the security group to which the rules are to be attached",
-      "pos": {
-        "filename": "variables.tf",
-        "line": 36
-      }
     },
     "security_group_name": {
       "name": "security_group_name",
@@ -55,7 +57,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 42
+        "line": 59
       },
       "min_length": 1,
       "max_length": 63,
@@ -64,7 +66,7 @@
     },
     "security_group_rules": {
       "name": "security_group_rules",
-      "type": "list(\n    object({\n      add_ibm_cloud_internal_rules = optional(bool)\n      name                         = string\n      direction                    = string\n      remote                       = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
+      "type": "list(\n    object({\n      name      = string\n      direction = string\n      remote    = string\n      tcp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      udp = optional(\n        object({\n          port_max = optional(number)\n          port_min = optional(number)\n        })\n      )\n      icmp = optional(\n        object({\n          type = optional(number)\n          code = optional(number)\n        })\n      )\n    })\n  )",
       "description": "A list of security group rules to be added to the default vpc security group",
       "default": [],
       "pos": {
@@ -84,7 +86,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 60
+        "line": 83
       },
       "immutable": true,
       "min_length": 1,
@@ -94,31 +96,39 @@
     "vpc_id": {
       "name": "vpc_id",
       "type": "string",
-      "description": "ID of the VPC to create security group. Only required if 'create_security_group' is true",
+      "description": "ID of the VPC to create security group. Only required if 'existing_security_group_name' is null",
       "required": true,
       "source": [
         "ibm_is_security_group.sg.vpc"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 48
+        "line": 71
       },
       "immutable": true
     }
   },
   "outputs": {
+    "security_group_id": {
+      "name": "security_group_id",
+      "description": "The ID of the security group where the rules are added",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 10
+      }
+    },
     "security_group_rule": {
       "name": "security_group_rule",
       "description": "Security group rules",
       "value": "ibm_is_security_group_rule.security_group_rule",
       "pos": {
         "filename": "outputs.tf",
-        "line": 10
+        "line": 15
       }
     },
     "security_target": {
       "name": "security_target",
-      "description": "Security targets attached",
+      "description": "Resources added to the security group",
       "value": "ibm_is_security_group_target.sg_target",
       "pos": {
         "filename": "outputs.tf",
@@ -143,7 +153,7 @@
       "type": "ibm_is_security_group",
       "name": "sg",
       "attributes": {
-        "count": "create_security_group",
+        "count": "existing_security_group_name",
         "name": "security_group_name",
         "resource_group": "resource_group",
         "vpc": "vpc_id"
@@ -153,7 +163,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 5
+        "line": 7
       }
     },
     "ibm_is_security_group_rule.security_group_rule": {
@@ -161,14 +171,14 @@
       "type": "ibm_is_security_group_rule",
       "name": "security_group_rule",
       "attributes": {
-        "group": "create_security_group"
+        "group": "existing_security_group_name"
       },
       "provider": {
         "name": "ibm"
       },
       "pos": {
         "filename": "main.tf",
-        "line": 26
+        "line": 34
       }
     },
     "ibm_is_security_group_target.sg_target": {
@@ -177,7 +187,7 @@
       "name": "sg_target",
       "attributes": {
         "count": "target_ids",
-        "security_group": "create_security_group",
+        "security_group": "existing_security_group_name",
         "target": "target_ids"
       },
       "provider": {
@@ -185,10 +195,27 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 16
+        "line": 24
       }
     }
   },
-  "data_resources": {},
+  "data_resources": {
+    "data.ibm_is_security_group.existing_sg": {
+      "mode": "data",
+      "type": "ibm_is_security_group",
+      "name": "existing_sg",
+      "attributes": {
+        "count": "existing_security_group_name",
+        "name": "existing_security_group_name"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 14
+      }
+    }
+  },
   "module_calls": {}
 }

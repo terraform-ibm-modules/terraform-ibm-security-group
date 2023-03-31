@@ -2,8 +2,10 @@
 
 A default example that uses the module's default variable values.
 This example uses the IBM Cloud Terraform provider to create this infrastructure:
-- A resource group, if one is not passed in.
-- A VPC in the resource group.
-- Security group rules in the default security group in the VPC.
+ - A resource group, if one is not passed in.
+ - A VPC, if one is not passed in.
+ - A security group, if one is not passed in
+ - Security group rules with CIDR blocks in a security group
+ - Security group rules with an existing security group in a security group
 
 <!-- Add your example and link to it from the module's main readme file. -->

@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sgr"
+  default     = "test-sg"
 }
 
 variable "vpc_id" {
@@ -32,10 +32,9 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      add_ibm_cloud_internal_rules = optional(bool)
-      name                         = string
-      direction                    = string
-      remote                       = string
+      name      = string
+      direction = string
+      remote    = string
       tcp = optional(
         object({
           port_max = optional(number)
@@ -57,45 +56,50 @@ variable "security_group_rules" {
     })
   )
   default = [{
-    add_ibm_cloud_internal_rules = true
-    name                         = "allow-all-inbound"
-    direction                    = "inbound"
-    remote                       = "0.0.0.0/0"
+    name      = "allow-all-inbound"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    }, {
+    name      = "sgr-tcp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    tcp = {
+      port_min = 8080
+      port_max = 8080
+    }
+    }, {
+    name      = "sgr-udp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    udp = {
+      port_min = 805
+      port_max = 807
+    }
+    }, {
+    name      = "sgr-icmp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    icmp = {
+      code = 20
+      type = 30
+    }
   }]
-
-  validation {
-    error_message = "Security group rule direction can only be `inbound` or `outbound`."
-    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
-      flatten([
-        # Check through rules
-        for rule in var.security_group_rules :
-        # Return false if direction is not valid
-        false if !contains(["inbound", "outbound"], rule.direction)
-      ])
-    )) == 0
-  }
-
-  validation {
-    error_message = "Security group rule names must match the regex pattern ^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$."
-    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
-      flatten([
-        # Check through rules
-        for rule in var.security_group_rules :
-        # Return false if direction is not valid
-        false if !can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", rule.name))
-      ])
-    )) == 0
-  }
-}
-
-variable "create_security_group" {
-  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
-  type        = bool
-  default     = false
 }
 
 variable "resource_tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
   default     = []
+}
+
+variable "vpc_name" {
+  type        = string
+  description = "Name of the VPC to be created"
+  default     = "vpc"
+}
+
+variable "add_ibm_cloud_internal_rules" {
+  description = "Add IBM cloud Internal rules to the provided security group rules"
+  type        = bool
+  default     = false
 }

@@ -1,13 +1,21 @@
 ############################################################################
 # Security Group
+# (if var.existing_security_group_name is null, create a new security group
+# with name = var.security_group_name)
 ############################################################################
 
 resource "ibm_is_security_group" "sg" {
-  count          = var.create_security_group ? 1 : 0
+  count          = var.existing_security_group_name == null ? 1 : 0
   name           = var.security_group_name
   vpc            = var.vpc_id
   resource_group = var.resource_group
 }
+
+data "ibm_is_security_group" "existing_sg" {
+  count = var.existing_security_group_name == null ? 0 : 1
+  name  = var.existing_security_group_name
+}
+
 
 #############################################################################
 # Security Group Target
@@ -15,7 +23,7 @@ resource "ibm_is_security_group" "sg" {
 
 resource "ibm_is_security_group_target" "sg_target" {
   count          = length(var.target_ids)
-  security_group = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
+  security_group = var.existing_security_group_name != null ? data.ibm_is_security_group.existing_sg[0].id : ibm_is_security_group.sg[0].id
   target         = var.target_ids[count.index]
 }
 
@@ -24,27 +32,27 @@ resource "ibm_is_security_group_target" "sg_target" {
 #############################################################################
 
 resource "ibm_is_security_group_rule" "security_group_rule" {
-  for_each  = local.all_rules_map
-  group     = var.create_security_group ? ibm_is_security_group.sg[0].id : var.security_group_id
-  direction = each.value.direction
-  remote    = each.value.remote
+  count     = length(local.all_rules)
+  group     = var.existing_security_group_name != null ? data.ibm_is_security_group.existing_sg[0].id : ibm_is_security_group.sg[0].id
+  direction = local.all_rules[count.index].direction
+  remote    = local.all_rules[count.index].remote
 
   dynamic "tcp" {
 
     # Only allow creation of tcp rules if all of the keys are not null.
     # if rules null
-    for_each = (each.value.tcp == null
+    for_each = (local.all_rules[count.index].tcp == null
       # empty array
       ? []
       # otherwise loop through the block and include if all of the keys are not null.
       # the default behavior will be to set 'null' 'port_min' values to 1 if null
       # and 'port_max' to 65535 if null
-    : length([for value in ["port_min", "port_max"] : true if lookup(each.value["tcp"], value, null) == null]) == 2 ? [] : [each.value])
+    : length([for value in ["port_min", "port_max"] : true if lookup(local.all_rules[count.index]["tcp"], value, null) == null]) == 2 ? [] : [local.all_rules[count.index]])
 
     content {
       port_min = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "tcp"
         ),
         "port_min",
@@ -53,7 +61,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
 
       port_max = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "tcp"
         ),
         "port_max",
@@ -66,18 +74,18 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
 
     # Only allow creation of udp rules if all of the keys are not null.
     # if rules null
-    for_each = (each.value.udp == null
+    for_each = (local.all_rules[count.index].udp == null
       # empty array
       ? []
       # otherwise loop through the block and include if all of the keys are not null.
       # the default behavior will be to set 'null' 'port_min' values to 1 if null
       # and 'port_max' to 65535 if null
-    : length([for value in ["port_min", "port_max"] : true if lookup(each.value["udp"], value, null) == null]) == 2 ? [] : [each.value])
+    : length([for value in ["port_min", "port_max"] : true if lookup(local.all_rules[count.index]["udp"], value, null) == null]) == 2 ? [] : [local.all_rules[count.index]])
 
     content {
       port_min = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "udp"
         ),
         "port_min",
@@ -85,7 +93,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
       )
       port_max = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "udp"
         ),
         "port_max",
@@ -97,18 +105,18 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
   dynamic "icmp" {
     # Only allow creation of icmp rules if all of the keys are not null.
     # if rules null
-    for_each = (each.value.icmp == null
+    for_each = (local.all_rules[count.index].icmp == null
       # empty array
       ? []
       # otherwise loop through the block and include if all of the keys are not null.
       # the default behavior will be to set 'null' 'type' values to 0 if null
       # and 'code' to 254 if null
-    : length([for value in ["type", "code"] : true if lookup(each.value["icmp"], value, null) == null]) == 2 ? [] : [each.value])
+    : length([for value in ["type", "code"] : true if lookup(local.all_rules[count.index]["icmp"], value, null) == null]) == 2 ? [] : [local.all_rules[count.index]])
 
     content {
       type = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "icmp"
         ),
         "type",
@@ -116,7 +124,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
       )
       code = lookup(
         lookup(
-          each.value,
+          local.all_rules[count.index],
           "icmp"
         ),
         "code",
@@ -129,17 +137,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
 locals {
 
   # tflint-ignore: terraform_unused_declarations
-  validate_vpc_id = var.create_security_group && var.vpc_id == null ? tobool("VPC ID is required when creating a new security group") : true
-
-  security_group_rule_object = {
-    for rule in var.security_group_rules :
-    rule.name => rule
-  }
-
-  ibm_cloud_internal_rules_object = {
-    for rule in local.ibm_cloud_internal_rules :
-    rule.name => rule
-  }
+  validate_vpc_id = var.existing_security_group_name == null && var.vpc_id == null ? tobool("VPC ID is required when creating a new security group") : true
 
   # IaaS and PaaS Rules
   ibm_cloud_internal_rules = [
@@ -147,66 +145,36 @@ locals {
       name      = "ibmflow-iaas-outbound"
       direction = "outbound"
       remote    = "161.26.0.0/16"
-      tcp       = null
-      udp       = null
-      icmp      = null
+      tcp       = {}
+      udp       = {}
+      icmp      = {}
     },
     {
       name      = "ibmflow-iaas-inbound"
       direction = "inbound"
       remote    = "161.26.0.0/16"
-      tcp       = null
-      udp       = null
-      icmp      = null
+      tcp       = {}
+      udp       = {}
+      icmp      = {}
     },
     {
       name      = "ibmflow-paas-outbound"
       direction = "outbound"
       remote    = "166.8.0.0/14"
-      tcp       = null
-      udp       = null
-      icmp      = null
+      tcp       = {}
+      udp       = {}
+      icmp      = {}
     },
     {
       name      = "ibmflow-paas-inbound"
       direction = "inbound"
       remote    = "166.8.0.0/14"
-      tcp       = null
-      udp       = null
-      icmp      = null
+      tcp       = {}
+      udp       = {}
+      icmp      = {}
     }
   ]
 
-  # merge internal and customer provide sg rules depending on add_ibm_cloud_internal_rules
-  # this creates a map with customer security group name as key and all merged rules are value
-  all_rules = {
-    for sec_rule in local.security_group_rule_object :
-    sec_rule.name => concat(
-      # These rules cannot be added in a conditional operator due to inconsistent typing
-      # This will add all internal rules if the security group object has add_ibm_cloud_internal_rules set to true
-      [
-        for rule in local.ibm_cloud_internal_rules_object :
-        rule if sec_rule.add_ibm_cloud_internal_rules == true
-      ],
-      [sec_rule]
-    )
-  }
-
-  # extract distinct rules as add_ibm_cloud_internal_rules = true for every object in sg object may contain duplicates
-  all_rules_values = distinct([for v in flatten(values(local.all_rules)) :
-    merge({
-      direction = v.direction, remote = v.remote, name = v.name,
-      icmp      = v.icmp == null ? null : { code = v.icmp.code, type = v.icmp.type }
-      tcp       = v.tcp == null ? null : { port_min = v.tcp.port_min, port_max = v.tcp.port_max }
-      udp       = v.udp == null ? null : { port_min = v.udp.port_min, port_max = v.udp.port_max }
-
-    })
-  ])
-
-  # extract merged rules and
-  # create a map with rule name as key and rule as value
-  all_rules_map = {
-    for rule in local.all_rules_values :
-    rule.name => rule
-  }
+  # concatenate IBM internal rules and customer security group rules depending on add_ibm_cloud_internal_rules
+  all_rules = concat(var.security_group_rules, var.add_ibm_cloud_internal_rules ? local.ibm_cloud_internal_rules : [])
 }

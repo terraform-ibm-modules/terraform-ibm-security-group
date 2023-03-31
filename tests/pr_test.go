@@ -11,7 +11,6 @@ import (
 // Use existing resource group
 const resourceGroup = "geretain-test-resources"
 const defaultExampleTerraformDir = "examples/default"
-const completeExampleTerraformDir = "examples/complete"
 const sgTargetExampleTerraformDir = "examples/sg-target-example"
 
 func TestRunDefaultExample(t *testing.T) {
@@ -29,14 +28,28 @@ func TestRunDefaultExample(t *testing.T) {
 	assert.NotNil(t, output, "Expected some output")
 }
 
-func TestRunCompleteExample(t *testing.T) {
+func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 	t.Parallel()
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
-		TerraformDir:  completeExampleTerraformDir,
-		Prefix:        "test-sgr-complete",
+		TerraformDir:  defaultExampleTerraformDir,
+		Prefix:        "test-sgr-default",
 		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"add_ibm_cloud_internal_rules": false,
+			"security_group_rules": []map[string]interface{}{
+				{
+					"name":      "sgr-tcp",
+					"direction": "inbound",
+					"remote":    "0.0.0.0/0",
+					"tcp": map[string]interface{}{
+						"port_min": 8080,
+						"port_max": 8080,
+					},
+				},
+			},
+		},
 	})
 
 	output, err := options.RunTestConsistency()
@@ -53,7 +66,27 @@ func TestRunSGTargetExample(t *testing.T) {
 		Prefix:        "test-sgr-target",
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"region": "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"add_ibm_cloud_internal_rules": false,
+		},
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunSGTargetExampleNoRules(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  sgTargetExampleTerraformDir,
+		Prefix:        "test-sgr-target",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"security_group_rules": []map[string]interface{}{},
 		},
 	})
 

@@ -55,10 +55,11 @@ resource "ibm_is_lb" "sg_lb" {
 ##############################################################################
 
 module "create_sgr_rule" {
-  source                = "../.."
-  security_group_rules  = var.security_group_rules
-  create_security_group = var.create_security_group
-  resource_group        = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
-  target_ids            = [ibm_is_lb.sg_lb.id]
-  vpc_id                = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  source                       = "../.."
+  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+  security_group_name          = "${var.prefix}-target"
+  security_group_rules         = var.security_group_rules
+  resource_group               = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  vpc_id                       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  target_ids                   = [ibm_is_lb.sg_lb.id]
 }

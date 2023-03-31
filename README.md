@@ -21,13 +21,14 @@ With this module you can create the following infrastructure:
 ```hcl
 module "create_sgr_rule" {
   source               = "git::https://github.com/terraform-ibm-modules/terraform-ibm-security-group"
+  add_ibm_cloud_internal_rules   = true
+  security_group_name   = "test-sg"
   security_group_rules = [{
     name      = "allow-all-inbound"
     direction = "inbound"
     remote    = "0.0.0.0/0"
   }]
   target_ids            = ["r006-37e5b107-3006-480b-a340-bb1951357a73"]
-  security_group_id    = "r006-16838c70-cb9b-4cb6-a605-4bfd4618e96a"
 }
 ```
 
@@ -42,8 +43,7 @@ You need the following permissions to run this module.
 ## Examples
 
 - [ Default example](examples/default)
-- [ Example that creates a new security group](examples/complete)
-- [ Example that adds internal IBM IPs to security group rules](examples/add-internal-ips)
+- [ Example that adds a resource to security group](examples/sg-target-example)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -64,25 +64,27 @@ No modules.
 | [ibm_is_security_group.sg](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group) | resource |
 | [ibm_is_security_group_rule.security_group_rule](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule) | resource |
 | [ibm_is_security_group_target.sg_target](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_target) | resource |
+| [ibm_is_security_group.existing_sg](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_security_group) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | True to create new security group. False if security group is already existing and security group rules are to be added | `bool` | `false` | no |
+| <a name="input_add_ibm_cloud_internal_rules"></a> [add\_ibm\_cloud\_internal\_rules](#input\_add\_ibm\_cloud\_internal\_rules) | Add IBM cloud Internal rules to the provided security group rules | `bool` | `false` | no |
+| <a name="input_existing_security_group_name"></a> [existing\_security\_group\_name](#input\_existing\_security\_group\_name) | Name of the security group to be created | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | An existing resource group name to use for this example, if unset a new resource group will be created | `string` | `null` | no |
-| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | ID of the security group to which the rules are to be attached | `string` | `null` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group to be created | `string` | `"test-sg"` | no |
-| <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br>    object({<br>      add_ibm_cloud_internal_rules = optional(bool)<br>      name                         = string<br>      direction                    = string<br>      remote                       = string<br>      tcp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      udp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      icmp = optional(<br>        object({<br>          type = optional(number)<br>          code = optional(number)<br>        })<br>      )<br>    })<br>  )</pre> | `[]` | no |
+| <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br>    object({<br>      name      = string<br>      direction = string<br>      remote    = string<br>      tcp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      udp = optional(<br>        object({<br>          port_max = optional(number)<br>          port_min = optional(number)<br>        })<br>      )<br>      icmp = optional(<br>        object({<br>          type = optional(number)<br>          code = optional(number)<br>        })<br>      )<br>    })<br>  )</pre> | `[]` | no |
 | <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC to create security group. Only required if 'create\_security\_group' is true | `string` | `null` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of the VPC to create security group. Only required if 'existing\_security\_group\_name' is null | `string` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group where the rules are added |
 | <a name="output_security_group_rule"></a> [security\_group\_rule](#output\_security\_group\_rule) | Security group rules |
-| <a name="output_security_target"></a> [security\_target](#output\_security\_target) | Security targets attached |
+| <a name="output_security_target"></a> [security\_target](#output\_security\_target) | Resources added to the security group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->
 

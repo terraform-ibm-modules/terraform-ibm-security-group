@@ -6,10 +6,9 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      add_ibm_cloud_internal_rules = optional(bool)
-      name                         = string
-      direction                    = string
-      remote                       = string
+      name      = string
+      direction = string
+      remote    = string
       tcp = optional(
         object({
           port_max = optional(number)
@@ -31,12 +30,30 @@ variable "security_group_rules" {
     })
   )
   default = []
-}
 
-variable "security_group_id" {
-  description = "ID of the security group to which the rules are to be attached"
-  type        = string
-  default     = null
+  validation {
+    error_message = "Security group rule direction can only be `inbound` or `outbound`."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
+      flatten([
+        # Check through rules
+        for rule in var.security_group_rules :
+        # Return false if direction is not valid
+        false if !contains(["inbound", "outbound"], rule.direction)
+      ])
+    )) == 0
+  }
+
+  validation {
+    error_message = "Security group rule names must match the regex pattern ^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
+      flatten([
+        # Check through rules
+        for rule in var.security_group_rules :
+        # Return false if direction is not valid
+        false if !can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", rule.name))
+      ])
+    )) == 0
+  }
 }
 
 variable "security_group_name" {
@@ -45,8 +62,14 @@ variable "security_group_name" {
   default     = "test-sg"
 }
 
+variable "existing_security_group_name" {
+  description = "Name of the security group to be created"
+  type        = string
+  default     = null
+}
+
 variable "vpc_id" {
-  description = "ID of the VPC to create security group. Only required if 'create_security_group' is true"
+  description = "ID of the VPC to create security group. Only required if 'existing_security_group_name' is null"
   type        = string
   default     = null
 }
@@ -63,8 +86,8 @@ variable "target_ids" {
   default     = []
 }
 
-variable "create_security_group" {
-  description = "True to create new security group. False if security group is already existing and security group rules are to be added"
+variable "add_ibm_cloud_internal_rules" {
+  description = "Add IBM cloud Internal rules to the provided security group rules"
   type        = bool
   default     = false
 }
