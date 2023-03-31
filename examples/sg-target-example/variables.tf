@@ -1,3 +1,5 @@
+
+# Common variables
 variable "ibmcloud_api_key" {
   type        = string
   description = "The IBM Cloud API Key"
@@ -16,18 +18,13 @@ variable "prefix" {
   default     = "test-sg"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "ID of the VPC"
-  default     = null
-}
-
 variable "resource_group" {
   type        = string
   description = "An existing resource group name to use for this example, if unset a new resource group will be created"
   default     = null
 }
 
+# Security group rule variables
 variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
@@ -59,43 +56,39 @@ variable "security_group_rules" {
     name      = "allow-all-inbound"
     direction = "inbound"
     remote    = "0.0.0.0/0"
-    }, {
-    name      = "sgr-tcp"
-    direction = "inbound"
-    remote    = "0.0.0.0/0"
-    tcp = {
-      port_min = 8080
-      port_max = 8080
-    }
-    }, {
-    name      = "sgr-udp"
-    direction = "inbound"
-    remote    = "0.0.0.0/0"
-    udp = {
-      port_min = 805
-      port_max = 807
-    }
-    }, {
-    name      = "sgr-icmp"
-    direction = "inbound"
-    remote    = "0.0.0.0/0"
-    icmp = {
-      code = 20
-      type = 30
-    }
   }]
 }
 
-variable "resource_tags" {
-  type        = list(string)
-  description = "Optional list of tags to be added to created resources"
-  default     = []
+# VPC variables
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC"
+  default     = null
 }
 
 variable "vpc_name" {
   type        = string
   description = "Name of the VPC to be created"
   default     = "vpc"
+}
+
+# Subnet variables
+variable "zone" {
+  type        = string
+  description = "The subnet zone name"
+  default     = "us-south-1"
+}
+
+variable "total_ipv4_address_count" {
+  type        = number
+  description = "(Optional) The IPv4 range of the subnet. Either ipv4_cidr_block or total_ipv4_address_count input must be provided in the resource"
+  default     = 256
+}
+
+variable "resource_tags" {
+  type        = list(string)
+  description = "Optional list of tags to be added to created resources"
+  default     = []
 }
 
 variable "add_ibm_cloud_internal_rules" {

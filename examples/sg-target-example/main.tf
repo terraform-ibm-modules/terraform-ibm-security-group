@@ -6,6 +6,7 @@
 resource "ibm_resource_group" "resource_group" {
   count = var.resource_group != null ? 0 : 1
   name  = "${var.prefix}-rg"
+
 }
 
 data "ibm_resource_group" "existing_resource_group" {
@@ -29,28 +30,36 @@ module "vpc" {
 }
 
 ##############################################################################
+# Create subnet
+##############################################################################
+
+resource "ibm_is_subnet" "subnet" {
+  name                     = "${var.prefix}-subnet"
+  vpc                      = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  zone                     = var.zone
+  total_ipv4_address_count = var.total_ipv4_address_count
+  resource_group           = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+}
+
+##############################################################################
+# Create application load balancer
+##############################################################################
+
+resource "ibm_is_lb" "sg_lb" {
+  name    = "${var.prefix}-load-balancer"
+  subnets = [ibm_is_subnet.subnet.id]
+}
+
+##############################################################################
 # Update security group
 ##############################################################################
 
 module "create_sgr_rule" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
-  security_group_name          = "${var.prefix}-1"
+  security_group_name          = "${var.prefix}-target"
   security_group_rules         = var.security_group_rules
   resource_group               = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   vpc_id                       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
-}
-
-module "create_sgr_rule1" {
-  source                       = "../.."
-  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
-  security_group_name          = "${var.prefix}-2"
-  # sg rule referencing a security group
-  security_group_rules = [{
-    name      = "allow-all-inbound-sg"
-    direction = "inbound"
-    remote    = module.create_sgr_rule.security_group_id
-  }]
-  resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
-  vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  target_ids                   = [ibm_is_lb.sg_lb.id]
 }
