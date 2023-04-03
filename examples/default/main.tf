@@ -29,10 +29,11 @@ module "vpc" {
 }
 
 ##############################################################################
-# Update security group
+# Create security groups for demonstration purposes in this example
 ##############################################################################
 
-module "create_sgr_rule" {
+# Create a first security group with client security_group_rules + rules for internal ibm flows
+module "security_group_1" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
   security_group_name          = "${var.prefix}-1"
@@ -41,7 +42,8 @@ module "create_sgr_rule" {
   vpc_id                       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
 }
 
-module "create_sgr_rule1" {
+# Create a second security group that reference the first security group (inbound) + (optionally) rules for internal ibm flows
+module "security_group_2" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
   security_group_name          = "${var.prefix}-2"
@@ -49,7 +51,7 @@ module "create_sgr_rule1" {
   security_group_rules = [{
     name      = "allow-all-inbound-sg"
     direction = "inbound"
-    remote    = module.create_sgr_rule.security_group_id
+    remote    = module.security_group_1.security_group_id
   }]
   resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
