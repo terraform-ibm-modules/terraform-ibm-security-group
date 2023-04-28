@@ -87,6 +87,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_id"></a> [id](#output\_id) | The ID of the security group where the rules are added |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group where the rules are added |
 | <a name="output_security_group_rule"></a> [security\_group\_rule](#output\_security\_group\_rule) | Security group rules |
 | <a name="output_security_target"></a> [security\_target](#output\_security\_target) | Resources added to the security group |
