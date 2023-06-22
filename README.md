@@ -23,7 +23,8 @@ See the following [examples](#Examples) section for code that illustrates these 
 
 ```hcl
 module "create_sgr_rule" {
-  source               = "git::https://github.com/terraform-ibm-modules/terraform-ibm-security-group"
+  source  = "terraform-ibm-modules/security-group/ibm"
+  version = "latest" # Replace "latest" with a release version to lock into a specific release
   add_ibm_cloud_internal_rules   = true
   security_group_name   = "test-sg"
   security_group_rules = [{
