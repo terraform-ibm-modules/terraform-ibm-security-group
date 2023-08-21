@@ -96,7 +96,7 @@ resource "ibm_is_security_group_target" "sg_target" {
 
 resource "ibm_is_security_group_rule" "rule" {
   for_each = {
-    for rule in var.rules :
+    for rule in local.all_rules :
     (rule.name) => rule
   }
   group     = local.sg_id
