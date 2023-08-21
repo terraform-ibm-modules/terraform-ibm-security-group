@@ -9,10 +9,14 @@ output "security_target" {
 
 output "security_group_id" {
   description = "The ID of the security group where the rules are added"
-  value       = var.existing_security_group_name != null ? data.ibm_is_security_group.existing_sg[0].id : ibm_is_security_group.sg[0].id
+  value       = local.sg_id
+
+  depends_on = [ibm_is_security_group_rule.rule]
 }
 
 output "security_group_rule" {
   description = "Security group rules"
-  value       = ibm_is_security_group_rule.security_group_rule
+  value       = ibm_is_security_group_rule.rule
 }
+
+##############################################################################
