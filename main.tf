@@ -110,7 +110,7 @@ resource "ibm_is_security_group_rule" "rule" {
   dynamic "icmp" {
 
     # Runs a for each loop, if the rule block contains icmp, it looks through the block
-    # Otherwise the list will be empty        
+    # Otherwise the list will be empty
 
     for_each = (
       # Only allow creation of icmp rules if all of the keys are not null.
@@ -155,7 +155,7 @@ resource "ibm_is_security_group_rule" "rule" {
   dynamic "tcp" {
 
     # Runs a for each loop, if the rule block contains tcp, it looks through the block
-    # Otherwise the list will be empty     
+    # Otherwise the list will be empty
 
     for_each = (
       # Only allow creation of tcp rules if all of the keys are not null.
@@ -204,7 +204,7 @@ resource "ibm_is_security_group_rule" "rule" {
   dynamic "udp" {
 
     # Runs a for each loop, if the rule block contains udp, it looks through the block
-    # Otherwise the list will be empty     
+    # Otherwise the list will be empty
 
     for_each = (
       # Only allow creation of udp rules if all of the keys are not null.
