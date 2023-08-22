@@ -8,7 +8,7 @@
       "default": false,
       "pos": {
         "filename": "variables.tf",
-        "line": 89
+        "line": 35
       }
     },
     "existing_security_group_name": {
@@ -19,18 +19,12 @@
       "source": [
         "data.ibm_is_security_group.existing_sg.count",
         "data.ibm_is_security_group.existing_sg.name",
-        "ibm_is_security_group.sg.count",
-        "ibm_is_security_group_rule.security_group_rule.group",
-        "ibm_is_security_group_target.sg_target.security_group"
+        "ibm_is_security_group.sg.count"
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 65
-      },
-      "immutable": true,
-      "min_length": 1,
-      "max_length": 64,
-      "matches": "^[-0-9a-z_]+$"
+        "line": 11
+      }
     },
     "resource_group": {
       "name": "resource_group",
@@ -41,7 +35,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 77
+        "line": 23
       },
       "cloud_data_type": "resource_group",
       "immutable": true,
@@ -57,7 +51,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 59
+        "line": 5
       },
       "min_length": 1,
       "max_length": 63,
@@ -71,7 +65,7 @@
       "default": [],
       "pos": {
         "filename": "variables.tf",
-        "line": 5
+        "line": 47
       }
     },
     "target_ids": {
@@ -86,7 +80,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 83
+        "line": 29
       },
       "immutable": true,
       "min_length": 1,
@@ -103,7 +97,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 71
+        "line": 17
       },
       "immutable": true
     }
@@ -112,6 +106,7 @@
     "security_group_id": {
       "name": "security_group_id",
       "description": "The ID of the security group where the rules are added",
+      "value": "local.sg_id",
       "pos": {
         "filename": "outputs.tf",
         "line": 10
@@ -120,10 +115,10 @@
     "security_group_rule": {
       "name": "security_group_rule",
       "description": "Security group rules",
-      "value": "ibm_is_security_group_rule.security_group_rule",
+      "value": "ibm_is_security_group_rule.rule",
       "pos": {
         "filename": "outputs.tf",
-        "line": 15
+        "line": 17
       }
     },
     "security_target": {
@@ -137,13 +132,13 @@
     }
   },
   "required_core": [
-    "\u003e= 1.3.0"
+    "\u003e= 1.3"
   ],
   "required_providers": {
     "ibm": {
       "source": "IBM-Cloud/ibm",
       "version_constraints": [
-        "\u003e= 1.51.0"
+        "\u003e=1.52.1"
       ]
     }
   },
@@ -163,22 +158,19 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 7
+        "line": 57
       }
     },
-    "ibm_is_security_group_rule.security_group_rule": {
+    "ibm_is_security_group_rule.rule": {
       "mode": "managed",
       "type": "ibm_is_security_group_rule",
-      "name": "security_group_rule",
-      "attributes": {
-        "group": "existing_security_group_name"
-      },
+      "name": "rule",
       "provider": {
         "name": "ibm"
       },
       "pos": {
         "filename": "main.tf",
-        "line": 34
+        "line": 97
       }
     },
     "ibm_is_security_group_target.sg_target": {
@@ -187,7 +179,6 @@
       "name": "sg_target",
       "attributes": {
         "count": "target_ids",
-        "security_group": "existing_security_group_name",
         "target": "target_ids"
       },
       "provider": {
@@ -195,7 +186,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 24
+        "line": 85
       }
     }
   },
@@ -213,7 +204,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 14
+        "line": 64
       }
     }
   },
