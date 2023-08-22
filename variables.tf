@@ -99,11 +99,11 @@ variable "security_group_rules" {
 
   validation {
     error_message = "Security group rules can only have one of `icmp`, `udp`, or `tcp`."
-    condition = (var.rules == null || length(var.rules) == 0) ? true : length(distinct(
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
       # Get flat list of results
       flatten([
         # Check through rules
-        for rule in var.rules :
+        for rule in var.security_group_rules :
         # Return true if there is more than one of `icmp`, `udp`, or `tcp`
         true if length(
           [
