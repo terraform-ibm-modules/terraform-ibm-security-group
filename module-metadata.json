@@ -115,7 +115,7 @@
     "security_group_rule": {
       "name": "security_group_rule",
       "description": "Security group rules",
-      "value": "ibm_is_security_group_rule.rule",
+      "value": "ibm_is_security_group_rule.security_group_rule",
       "pos": {
         "filename": "outputs.tf",
         "line": 17
@@ -161,10 +161,10 @@
         "line": 57
       }
     },
-    "ibm_is_security_group_rule.rule": {
+    "ibm_is_security_group_rule.security_group_rule": {
       "mode": "managed",
       "type": "ibm_is_security_group_rule",
-      "name": "rule",
+      "name": "security_group_rule",
       "provider": {
         "name": "ibm"
       },
