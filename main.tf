@@ -94,7 +94,7 @@ resource "ibm_is_security_group_target" "sg_target" {
 # Create Rules
 ##############################################################################
 
-resource "ibm_is_security_group_rule" "rule" {
+resource "ibm_is_security_group_rule" "security_group_rule" {
   for_each = {
     for rule in local.all_rules :
     (rule.name) => rule
