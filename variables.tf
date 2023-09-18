@@ -1,5 +1,47 @@
 ##############################################################################
-# Input Variables
+# Security Group Variables
+##############################################################################
+
+variable "security_group_name" {
+  description = "Name of the security group to be created"
+  type        = string
+  default     = "test-sg"
+}
+
+variable "existing_security_group_name" {
+  description = "Name of the security group to be created"
+  type        = string
+  default     = null
+}
+
+variable "vpc_id" {
+  description = "ID of the VPC to create security group. Only required if 'existing_security_group_name' is null"
+  type        = string
+  default     = null
+}
+
+variable "resource_group" {
+  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
+  type        = string
+  default     = null
+}
+
+variable "target_ids" {
+  description = "(Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server"
+  type        = list(string)
+  default     = []
+}
+
+variable "add_ibm_cloud_internal_rules" {
+  description = "Add IBM cloud Internal rules to the provided security group rules"
+  type        = bool
+  default     = false
+}
+
+##############################################################################
+
+##############################################################################
+# Rule Variables
 ##############################################################################
 
 variable "security_group_rules" {
@@ -54,40 +96,24 @@ variable "security_group_rules" {
       ])
     )) == 0
   }
+
+  validation {
+    error_message = "Security group rules can only have one of `icmp`, `udp`, or `tcp`."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
+      # Get flat list of results
+      flatten([
+        # Check through rules
+        for rule in var.security_group_rules :
+        # Return true if there is more than one of `icmp`, `udp`, or `tcp`
+        true if length(
+          [
+            for type in ["tcp", "udp", "icmp"] :
+            true if rule[type] != null
+          ]
+        ) > 1
+      ])
+    )) == 0 # Checks for length. If all fields all correct, array will be empty
+  }
 }
 
-variable "security_group_name" {
-  description = "Name of the security group to be created"
-  type        = string
-  default     = "test-sg"
-}
-
-variable "existing_security_group_name" {
-  description = "Name of the security group to be created"
-  type        = string
-  default     = null
-}
-
-variable "vpc_id" {
-  description = "ID of the VPC to create security group. Only required if 'existing_security_group_name' is null"
-  type        = string
-  default     = null
-}
-
-variable "resource_group" {
-  description = "An existing resource group name to use for this example, if unset a new resource group will be created"
-  type        = string
-  default     = null
-}
-
-variable "target_ids" {
-  description = "(Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server"
-  type        = list(string)
-  default     = []
-}
-
-variable "add_ibm_cloud_internal_rules" {
-  description = "Add IBM cloud Internal rules to the provided security group rules"
-  type        = bool
-  default     = false
-}
+##############################################################################
