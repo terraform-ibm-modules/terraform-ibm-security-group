@@ -22,7 +22,7 @@ data "ibm_resource_group" "existing_resource_group" {
 module "vpc" {
   count             = var.vpc_id != null ? 0 : 1
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.5.0"
+  version           = "7.6.0"
   resource_group_id = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   region            = var.region
   prefix            = var.prefix
