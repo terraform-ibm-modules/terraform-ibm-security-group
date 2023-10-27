@@ -12,6 +12,7 @@ import (
 const resourceGroup = "geretain-test-resources"
 const defaultExampleTerraformDir = "examples/default"
 const sgTargetExampleTerraformDir = "examples/sg-target-example"
+const addRulesExampleTerraformDir = "examples/add-rules-to-existing-sg"
 
 func TestRunDefaultExample(t *testing.T) {
 	t.Parallel()
@@ -68,6 +69,25 @@ func TestRunSGTargetExample(t *testing.T) {
 		TerraformVars: map[string]interface{}{
 			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 			"add_ibm_cloud_internal_rules": false,
+		},
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
+}
+
+func TestRunAddRulesExample(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  addRulesExampleTerraformDir,
+		Prefix:        "test-add-rules-target",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"add_ibm_cloud_internal_rules": true,
 		},
 	})
 
