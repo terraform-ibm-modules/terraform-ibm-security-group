@@ -27,6 +27,7 @@ module "vpc" {
   prefix               = var.prefix
   name                 = "vpc"
   clean_default_sg_acl = true
+  tags                 = var.resource_tags
 }
 
 ##############################################################################
