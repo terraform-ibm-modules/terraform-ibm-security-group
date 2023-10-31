@@ -45,7 +45,7 @@ You need the following permissions to run this module.
         - `Editor` platform access
 
 ## Examples
-
+<!-- BEGIN EXAMPLES HOOK -->
 - [ Default example](examples/default)
 - [ Example that adds a resource to security group](examples/sg-target-example)
 <!-- END EXAMPLES HOOK -->
