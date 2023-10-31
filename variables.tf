@@ -8,8 +8,14 @@ variable "security_group_name" {
   default     = "test-sg"
 }
 
+variable "use_existing_security_group" {
+  description = "If set, the modules modifies the specified existing_security_group_name."
+  type        = bool
+  default     = false
+}
+
 variable "existing_security_group_name" {
-  description = "Name of the security group to be created"
+  description = "Name of an existing security group. If set, rules will be added to the specified security group."
   type        = string
   default     = null
 }
