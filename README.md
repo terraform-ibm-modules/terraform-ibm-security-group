@@ -45,9 +45,12 @@ You need the following permissions to run this module.
         - `Editor` platform access
 
 ## Examples
+<!-- BEGIN EXAMPLES HOOK -->
+## Examples
 
+- [ Example to add security group rules to an existing security group](examples/add-rules-to-existing-sg)
 - [ Default example](examples/default)
-- [ Example that adds a resource to security group](examples/sg-target-example)
+- [ Example to attach resources to security group](examples/sg-target-example)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
