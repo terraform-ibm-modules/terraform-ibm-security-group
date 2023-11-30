@@ -46,9 +46,11 @@ resource "ibm_is_subnet" "subnet" {
 # Create application load balancer
 ##############################################################################
 
+
 resource "ibm_is_lb" "sg_lb" {
   name    = "${var.prefix}-load-balancer"
   subnets = [ibm_is_subnet.subnet.id]
+  type    = "private"
 }
 
 ##############################################################################

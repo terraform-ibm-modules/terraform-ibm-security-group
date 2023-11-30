@@ -48,6 +48,7 @@ You need the following permissions to run this module.
 <!-- BEGIN EXAMPLES HOOK -->
 ## Examples
 
+- [ Example to add security group rules to an existing security group (kube)](examples/add-rules-to-existing-sg-kube)
 - [ Example to add security group rules to an existing security group](examples/add-rules-to-existing-sg)
 - [ Default example](examples/default)
 - [ Example to attach resources to security group](examples/sg-target-example)
