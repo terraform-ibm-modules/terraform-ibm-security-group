@@ -19,7 +19,20 @@ The module supports the following scenarios:
 
 See the following [examples](#Examples) section for code that illustrates these scenarios.
 
-## Usage
+<!-- Below content is automatically populated via pre-commit hook -->
+<!-- BEGIN OVERVIEW HOOK -->
+## Overview
+* [terraform-ibm-security-group](#terraform-ibm-security-group)
+* [Examples](./examples)
+    * [Default example](./examples/default)
+    * [Example to add security group rules to an existing security group (kube)](./examples/add-rules-to-existing-sg-kube)
+    * [Example to add security group rules to an existing security group](./examples/add-rules-to-existing-sg)
+    * [Example to attach resources to security group](./examples/sg-target-example)
+* [Contributing](#contributing)
+<!-- END OVERVIEW HOOK -->
+
+## terraform-ibm-security-group
+### Usage
 
 ```hcl
 module "create_sgr_rule" {
@@ -44,15 +57,6 @@ You need the following permissions to run this module.
     - **VPC Infrastructure** services
         - `Editor` platform access
 
-## Examples
-<!-- BEGIN EXAMPLES HOOK -->
-## Examples
-
-- [ Example to add security group rules to an existing security group (kube)](examples/add-rules-to-existing-sg-kube)
-- [ Example to add security group rules to an existing security group](examples/add-rules-to-existing-sg)
-- [ Default example](examples/default)
-- [ Example to attach resources to security group](examples/sg-target-example)
-<!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
