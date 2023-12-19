@@ -23,4 +23,4 @@ repository:
   # Uncomment this description property
   # and update the description to the current repo description.
   description: "Creates a security group with the option to add rules for internal IBM Cloud flows"
-  topics: core-team, terraform, ibm-cloud, terraform-module, security-group
+  topics: core-team, terraform, ibm-cloud, terraform-module, security-group, supported, stable
