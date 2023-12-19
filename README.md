@@ -1,5 +1,3 @@
-<!-- BEGIN MODULE HOOK -->
-
 # IBM Security Group for VPC module
 <!-- UPDATE BADGE: Update the link for the following badge-->
 [![Stable (With quality checks)](https://img.shields.io/badge/Status-Stable%20(With%20quality%20checks)-green)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
@@ -36,20 +34,20 @@ See the following [examples](#Examples) section for code that illustrates these 
 
 ```hcl
 module "create_sgr_rule" {
-  source  = "terraform-ibm-modules/security-group/ibm"
-  version = "latest" # Replace "latest" with a release version to lock into a specific release
-  add_ibm_cloud_internal_rules   = true
-  security_group_name   = "test-sg"
-  security_group_rules = [{
+  source                       = "terraform-ibm-modules/security-group/ibm"
+  version                      = "latest" # Replace "latest" with a release version to lock into a specific release
+  add_ibm_cloud_internal_rules = true
+  security_group_name          = "test-sg"
+  security_group_rules         = [{
     name      = "allow-all-inbound"
     direction = "inbound"
     remote    = "0.0.0.0/0"
   }]
-  target_ids            = ["r006-37e5b107-3006-480b-a340-bb1951357a73"]
+  target_ids                   = ["r006-37e5b107-3006-480b-a340-bb1951357a73"]
 }
 ```
 
-## Required IAM access policies
+### Required IAM access policies
 
 You need the following permissions to run this module.
 
@@ -99,7 +97,6 @@ No modules.
 | <a name="output_security_group_rule"></a> [security\_group\_rule](#output\_security\_group\_rule) | Security group rules |
 | <a name="output_security_target"></a> [security\_target](#output\_security\_target) | Resources added to the security group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-<!-- BEGIN CONTRIBUTING HOOK -->
 
 <!-- Leave this section as is so that your module has a link to local development environment set up steps for contributors to follow -->
 ## Contributing
@@ -107,5 +104,3 @@ No modules.
 You can report issues and request features for this module in GitHub issues in the module repo. See [Report an issue or request a feature](https://github.com/terraform-ibm-modules/.github/blob/main/.github/SUPPORT.md).
 
 To set up your local development environment, see [Local development setup](https://terraform-ibm-modules.github.io/documentation/#/local-dev-setup) in the project documentation.
-<!-- Source for this readme file: https://github.com/terraform-ibm-modules/common-dev-assets/tree/main/module-assets/ci/module-template-automation -->
-<!-- END CONTRIBUTING HOOK -->
