@@ -77,7 +77,11 @@ variable "security_group_rules" {
       )
     })
   )
-  default = []
+  default = [{
+    name      = "allow-all-inbound"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+  }]
 
   validation {
     error_message = "Security group rule direction can only be `inbound` or `outbound`."
