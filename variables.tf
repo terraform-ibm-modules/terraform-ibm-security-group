@@ -55,7 +55,7 @@ variable "security_group_rules" {
   type = list(
     object({
       name      = string
-      direction = string
+      direction = optional(string, "inbound")
       remote    = string
       tcp = optional(
         object({
