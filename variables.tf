@@ -55,7 +55,7 @@ variable "security_group_rules" {
   type = list(
     object({
       name      = string
-      direction = optional(string)
+      direction = optional(string, "inbound")
       remote    = string
       tcp = optional(
         object({
@@ -77,9 +77,6 @@ variable "security_group_rules" {
       )
     })
   )
-  default = [{
-    direction = "inbound"
-  }]
 
   validation {
     error_message = "Security group rule direction can only be `inbound` or `outbound`."
