@@ -77,6 +77,7 @@ variable "security_group_rules" {
       )
     })
   )
+  default = []
 
   validation {
     error_message = "Security group rule direction can only be `inbound` or `outbound`."
