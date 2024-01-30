@@ -3,13 +3,13 @@
 ############################################################################
 
 locals {
-  sg_name_null_and_use_sg_true = !((var.existing_security_group_name != null || var.existing_security_group_id != null) && var.use_existing_security_group)
-  no_sg_name_and_no_vpc_id     = !(var.existing_security_group_name == null && var.existing_security_group_id == null && var.vpc_id != null)
+  sg_name_null_and_use_sg_true = (var.existing_security_group_name != null || var.existing_security_group_id != null) && var.use_existing_security_group
+  no_sg_name_and_no_vpc_id     = (var.existing_security_group_name != null || var.existing_security_group_id != null) && var.vpc_id == null
   mutually_exclusive           = var.existing_security_group_name != null && var.existing_security_group_id != null
 
   validation_message = coalesce(
-    local.sg_name_null_and_use_sg_true ? "existing_security_group_name or existing_security_group_id must be set when use_existing_security_group is set." : null,
-    local.no_sg_name_and_no_vpc_id ? "VPC ID is required when creating a new security group." : null,
+    !local.sg_name_null_and_use_sg_true ? "existing_security_group_name or existing_security_group_id must be set when use_existing_security_group is set." : null,
+    !local.no_sg_name_and_no_vpc_id ? "VPC ID is required when creating a new security group." : null,
     local.mutually_exclusive ? "existing_security_group_name and existing_security_group_id are mutually exclusive. Set either one or the other (or none)" :
     "Valid configuration."
   )
