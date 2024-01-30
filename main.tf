@@ -73,7 +73,7 @@ locals {
 ############################################################################
 
 resource "ibm_is_security_group" "sg" {
-  count          = var.use_existing_security_group ? 0 : 1
+  count          = var.use_existing_security_group || var.use_existing_security_group_id ? 0 : 1
   name           = var.security_group_name
   vpc            = var.vpc_id
   resource_group = var.resource_group
