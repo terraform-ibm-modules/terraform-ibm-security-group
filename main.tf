@@ -3,7 +3,7 @@
 ############################################################################
 
 locals {
-  sg_name_null_and_use_sg_true = !((var.existing_security_group_name != null || var.existing_security_group_id != null) && var.use_existing_security_group == false)
+  sg_name_null_and_use_sg_true = !((var.existing_security_group_name != null || var.existing_security_group_id != null) && var.use_existing_security_group)
   no_sg_name_and_no_vpc_id     = !(var.existing_security_group_name == null && var.existing_security_group_id == null && var.vpc_id != null)
   mutually_exclusive           = var.existing_security_group_name != null && var.existing_security_group_id != null
 
