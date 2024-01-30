@@ -15,7 +15,19 @@ variable "use_existing_security_group" {
 }
 
 variable "existing_security_group_name" {
-  description = "Name of an existing security group. If set, rules will be added to the specified security group."
+  description = "Name of an existing security group. Mutually exclusive with `existing_security_group_id`. If set, rules will be added to the specified security group."
+  type        = string
+  default     = null
+}
+
+variable "use_existing_security_group_id" {
+  description = "If set, the modules modifies the specified existing_security_group_id."
+  type        = bool
+  default     = false
+}
+
+variable "existing_security_group_id" {
+  description = "Id of an existing security group. Mutually exclusive with `existing_security_group_name`. If set, rules will be added to the specified security group."
   type        = string
   default     = null
 }
