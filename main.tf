@@ -7,7 +7,7 @@ locals {
   sg_name_set_and_use_sg_false = var.existing_security_group_name != null && !var.use_existing_security_group
   sg_id_null_and_use_sg_true   = var.existing_security_group_id == null && var.use_existing_security_group_id
   sg_id_set_and_use_sg_false   = var.existing_security_group_id != null && !var.use_existing_security_group_id
-  no_sg_name_and_no_vpc_id     = (var.use_existing_security_group == false || var.use_existing_security_group_id == false) && var.vpc_id == null
+  no_sg_name_and_no_vpc_id     = (var.use_existing_security_group == false && var.vpc_id == null) || (var.use_existing_security_group_id == false && var.vpc_id == null)
   mutually_exclusive           = var.existing_security_group_name != null && var.existing_security_group_id != null
 
   validation_message = coalesce(
