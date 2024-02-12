@@ -25,7 +25,7 @@ func TestRunDefaultExample(t *testing.T) {
 	})
 
 	options.TerraformVars = map[string]interface{}{
-		"tags": options.Tags,
+		"resource_tags": options.Tags,
 	}
 
 	output, err := options.RunTestConsistency()
