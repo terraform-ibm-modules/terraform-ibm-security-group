@@ -15,7 +15,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg"
+  default     = "test-sg-tar-ex"
 }
 
 variable "resource_group" {
