@@ -61,22 +61,27 @@ func TestRunDefaultExample(t *testing.T) {
 func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, defaultExampleTerraformDir, "test-sgr-no-rules")
-
-	options.TerraformVars = map[string]interface{}{
-		"add_ibm_cloud_internal_rules": false,
-		"security_group_rules": []map[string]interface{}{
-			{
-				"name":      "sgr-tcp",
-				"direction": "inbound",
-				"remote":    "0.0.0.0/0",
-				"tcp": map[string]interface{}{
-					"port_min": 8080,
-					"port_max": 8080,
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  defaultExampleTerraformDir,
+		Prefix:        "test-sgr-no-rules",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"access_tags":                  permanentResources["accessTags"],
+			"add_ibm_cloud_internal_rules": false,
+			"security_group_rules": []map[string]interface{}{
+				{
+					"name":      "sgr-tcp",
+					"direction": "inbound",
+					"remote":    "0.0.0.0/0",
+					"tcp": map[string]interface{}{
+						"port_min": 8080,
+						"port_max": 8080,
+					},
 				},
 			},
 		},
-	}
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -86,12 +91,17 @@ func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 func TestRunSGTargetExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, sgTargetExampleTerraformDir, "test-sgr-target")
-
-	options.TerraformVars = map[string]interface{}{
-		"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
-		"add_ibm_cloud_internal_rules": false,
-	}
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  sgTargetExampleTerraformDir,
+		Prefix:        "test-sgr-target",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"access_tags":                  permanentResources["accessTags"],
+			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"add_ibm_cloud_internal_rules": false,
+		},
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -101,11 +111,16 @@ func TestRunSGTargetExample(t *testing.T) {
 func TestRunAddRulesExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, addRulesExampleTerraformDir, "test-add-rules-target")
-
-	options.TerraformVars = map[string]interface{}{
-		"region": "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
-	}
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  addRulesExampleTerraformDir,
+		Prefix:        "test-add-rules-target",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"access_tags": permanentResources["accessTags"],
+			"region":      "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+		},
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -115,12 +130,16 @@ func TestRunAddRulesExample(t *testing.T) {
 func TestRunSGTargetExampleNoRules(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, sgTargetExampleTerraformDir, "test-sgr-target-no-rules")
-
-	options.TerraformVars = map[string]interface{}{
-		"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error.
-		"security_group_rules": []map[string]interface{}{},
-	}
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  sgTargetExampleTerraformDir,
+		Prefix:        "test-sgr-target-no-rules",
+		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
+			"security_group_rules": []map[string]interface{}{},
+		},
+	})
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
