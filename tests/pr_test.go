@@ -24,6 +24,10 @@ func TestRunDefaultExample(t *testing.T) {
 		ResourceGroup: resourceGroup,
 	})
 
+	options.TerraformVars = map[string]interface{}{
+		"tags": options.Tags,
+	}
+
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
