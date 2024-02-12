@@ -41,6 +41,8 @@ module "add_rules_to_workernodes_sg" {
     direction = "inbound"
     remote    = "192.0.2.0/24"
   }]
+  access_tags = var.access_tags
+  tags        = var.resource_tags
 }
 
 ##############################################################################
@@ -61,4 +63,6 @@ module "add_rules_to_lbvpc_sg" {
       port_max = 443
     }
   }]
+  access_tags = var.access_tags
+  tags        = var.resource_tags
 }

@@ -56,4 +56,6 @@ module "add_rules_to_sg" {
     direction = "inbound"
     remote    = "192.0.2.0/24"
   }]
+  access_tags = var.access_tags
+  tags        = var.resource_tags
 }
