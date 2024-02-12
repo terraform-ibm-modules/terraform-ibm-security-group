@@ -40,12 +40,10 @@ func setupOptions(t *testing.T, dir string, prefix string) *testhelper.TestOptio
 		TerraformDir:  dir,
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"access_tags": permanentResources["accessTags"],
+		},
 	})
-
-	options.TerraformVars = map[string]interface{}{
-		"access_tags":   permanentResources["accessTags"],
-		"resource_tags": options.Tags,
-	}
 
 	return options
 }
@@ -66,8 +64,6 @@ func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 	options := setupOptions(t, defaultExampleTerraformDir, "test-sgr-no-rules")
 
 	options.TerraformVars = map[string]interface{}{
-		"access_tags":                  permanentResources["accessTags"],
-		"resource_tags":                options.Tags,
 		"add_ibm_cloud_internal_rules": false,
 		"security_group_rules": []map[string]interface{}{
 			{
@@ -95,8 +91,6 @@ func TestRunSGTargetExample(t *testing.T) {
 	options.TerraformVars = map[string]interface{}{
 		"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 		"add_ibm_cloud_internal_rules": false,
-		"access_tags":                  permanentResources["accessTags"],
-		"resource_tags":                options.Tags,
 	}
 
 	output, err := options.RunTestConsistency()
@@ -110,9 +104,7 @@ func TestRunAddRulesExample(t *testing.T) {
 	options := setupOptions(t, addRulesExampleTerraformDir, "test-add-rules-target")
 
 	options.TerraformVars = map[string]interface{}{
-		"region":        "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
-		"access_tags":   permanentResources["accessTags"],
-		"resource_tags": options.Tags,
+		"region": "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 	}
 
 	output, err := options.RunTestConsistency()
@@ -128,8 +120,6 @@ func TestRunSGTargetExampleNoRules(t *testing.T) {
 	options.TerraformVars = map[string]interface{}{
 		"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 		"security_group_rules": []map[string]interface{}{},
-		"access_tags":          permanentResources["accessTags"],
-		"resource_tags":        options.Tags,
 	}
 
 	output, err := options.RunTestConsistency()
