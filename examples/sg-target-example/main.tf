@@ -65,4 +65,6 @@ module "create_sgr_rule" {
   resource_group               = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   vpc_id                       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
   target_ids                   = [ibm_is_lb.sg_lb.id]
+  access_tags                  = var.access_tags
+  tags                         = var.resource_tags
 }

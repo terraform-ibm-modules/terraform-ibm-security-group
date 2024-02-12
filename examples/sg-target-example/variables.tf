@@ -85,6 +85,12 @@ variable "total_ipv4_address_count" {
   default     = 256
 }
 
+variable "access_tags" {
+  description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
+  type        = list(string)
+  default     = []
+}
+
 variable "resource_tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
