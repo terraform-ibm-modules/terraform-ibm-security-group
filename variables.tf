@@ -56,6 +56,18 @@ variable "add_ibm_cloud_internal_rules" {
   default     = false
 }
 
+variable "access_tags" {
+  description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
+  type        = list(string)
+  default     = []
+}
+
+variable "tags" {
+  description = "List of resource tags to apply to security group created by this module."
+  type        = list(string)
+  default     = []
+}
+
 ##############################################################################
 
 ##############################################################################
