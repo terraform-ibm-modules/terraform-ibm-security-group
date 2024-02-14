@@ -13,7 +13,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg"
+  default     = "test-sg-default"
 }
 
 variable "vpc_id" {
@@ -89,6 +89,12 @@ variable "security_group_rules" {
 variable "resource_tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
+  default     = []
+}
+
+variable "access_tags" {
+  description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
+  type        = list(string)
   default     = []
 }
 

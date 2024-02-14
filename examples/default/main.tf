@@ -40,6 +40,8 @@ module "create_sgr_rule" {
   security_group_rules         = var.security_group_rules
   resource_group               = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   vpc_id                       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  access_tags                  = var.access_tags
+  tags                         = var.resource_tags
 }
 
 module "create_sgr_rule1" {
@@ -54,4 +56,6 @@ module "create_sgr_rule1" {
   }]
   resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
   vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  access_tags    = var.access_tags
+  tags           = var.resource_tags
 }

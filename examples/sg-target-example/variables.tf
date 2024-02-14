@@ -15,7 +15,7 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg"
+  default     = "test-sg-tar-ex"
 }
 
 variable "resource_group" {
@@ -83,6 +83,12 @@ variable "total_ipv4_address_count" {
   type        = number
   description = "(Optional) The IPv4 range of the subnet. Either ipv4_cidr_block or total_ipv4_address_count input must be provided in the resource"
   default     = 256
+}
+
+variable "access_tags" {
+  description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
+  type        = list(string)
+  default     = []
 }
 
 variable "resource_tags" {
