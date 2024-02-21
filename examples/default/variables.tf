@@ -7,13 +7,11 @@ variable "ibmcloud_api_key" {
 variable "region" {
   type        = string
   description = "Region to provision all resources created by this example"
-  default     = "us-south"
 }
 
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg-default"
 }
 
 variable "vpc_id" {
@@ -101,7 +99,6 @@ variable "access_tags" {
 variable "vpc_name" {
   type        = string
   description = "Name of the VPC to be created"
-  default     = "vpc"
 }
 
 variable "add_ibm_cloud_internal_rules" {
