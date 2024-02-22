@@ -97,7 +97,8 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group where the rules are added |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group where the rules are added. NOTE: This value will not be available until rules are applied, and it cannot be referenced as a remote for a rule variable for the same module block. If you need this value to use in a rule you are supplying, please use the `security_group_id_for_ref` output instead. |
+| <a name="output_security_group_id_for_ref"></a> [security\_group\_id\_for\_ref](#output\_security\_group\_id\_for\_ref) | The ID of the security group which can be used as remote reference in rules. NOTE: This value will be available as soon as the security group is created, and before rules are applied, which means it can be referenced as a remote in the rules input variable itself. If you require that all rules are applied first, please use the `security_group_id` output instead. |
 | <a name="output_security_group_rule"></a> [security\_group\_rule](#output\_security\_group\_rule) | Security group rules |
 | <a name="output_security_target"></a> [security\_target](#output\_security\_target) | Resources added to the security group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
