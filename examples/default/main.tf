@@ -31,6 +31,7 @@ module "vpc" {
 # Update security group
 ##############################################################################
 
+# Main example of wide range of basic rules
 module "create_sgr_rule" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
@@ -42,6 +43,7 @@ module "create_sgr_rule" {
   tags                         = var.resource_tags
 }
 
+# Example of creating new SG and rule, with the rule allowing access from another existing security group
 module "create_sgr_rule1" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
@@ -54,6 +56,23 @@ module "create_sgr_rule1" {
   }]
   resource_group = module.resource_group.resource_group_id
   vpc_id         = module.vpc[0].vpc_id
+  access_tags    = var.access_tags
+  tags           = var.resource_tags
+}
+
+# Example of new SG and rule, with the rule referencing the same SG that was created (self-reference)
+module "create_sgr_rule2" {
+  source                       = "../.."
+  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+  security_group_name          = "${var.prefix}-3"
+  # sg rule referencing its own parent sg
+  security_group_rules = [{
+    name      = "allow-all-inbound-same-sg"
+    direction = "inbound"
+    remote    = module.create_sgr_rule2.security_group_id_for_ref
+  }]
+  resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
   access_tags    = var.access_tags
   tags           = var.resource_tags
 }
