@@ -1,6 +1,5 @@
 ##############################################################################
 # Resource Group
-# (if var.resource_group is null, create a new RG using var.prefix)
 ##############################################################################
 
 module "resource_group" {
@@ -71,7 +70,7 @@ module "create_sgr_rule2" {
     direction = "inbound"
     remote    = module.create_sgr_rule2.security_group_id_for_ref
   }]
-  resource_group = var.resource_group != null ? data.ibm_resource_group.existing_resource_group[0].id : ibm_resource_group.resource_group[0].id
+  resource_group = module.resource_group.resource_group_id
   vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
   access_tags    = var.access_tags
   tags           = var.resource_tags
