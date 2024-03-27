@@ -16,7 +16,6 @@ data "ibm_container_vpc_worker_pool" "worker_pool" {
   worker_pool_name = data.ibm_container_vpc_cluster.cluster.worker_pools[0].name
 }
 
-
 ##############################################################################
 # Build name of the SGs
 # See https://cloud.ibm.com/docs/openshift?topic=openshift-vpc-security-group

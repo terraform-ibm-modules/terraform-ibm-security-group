@@ -69,6 +69,7 @@ func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 		TerraformVars: map[string]interface{}{
 			"access_tags":                  permanentResources["accessTags"],
 			"add_ibm_cloud_internal_rules": false,
+			"vpc_name":                     "vpc",
 			"security_group_rules": []map[string]interface{}{
 				{
 					"name":      "sgr-tcp",

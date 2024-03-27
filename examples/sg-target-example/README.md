@@ -2,6 +2,7 @@
 
 An example that adds a resource to a security group
 This example uses the IBM Cloud Terraform provider to create the following infrastructure:
+
  - A resource group, if one is not passed in.
  - A VPC, if one is not passed in.
  - An application load balancer
