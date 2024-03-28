@@ -96,11 +96,6 @@ variable "access_tags" {
   default     = []
 }
 
-variable "vpc_name" {
-  type        = string
-  description = "Name of the VPC to be created"
-}
-
 variable "add_ibm_cloud_internal_rules" {
   description = "Add IBM cloud Internal rules to the provided security group rules"
   type        = bool

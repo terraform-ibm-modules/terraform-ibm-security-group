@@ -1,4 +1,12 @@
 ##############################################################################
+#Local variables
+##############################################################################
+locals {
+  vpc_name = "vpc-instance"
+}
+
+
+##############################################################################
 # Resource Group
 ##############################################################################
 
@@ -22,7 +30,7 @@ module "vpc" {
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
-  name              = var.vpc_name
+  name              = local.vpc_name
   tags              = var.resource_tags
 }
 
