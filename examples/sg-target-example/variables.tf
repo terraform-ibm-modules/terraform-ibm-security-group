@@ -64,11 +64,6 @@ variable "vpc_id" {
   default     = null
 }
 
-variable "vpc_name" {
-  type        = string
-  description = "Name of the VPC to be created"
-}
-
 # Subnet variables
 variable "zone" {
   type        = string
