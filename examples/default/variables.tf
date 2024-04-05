@@ -7,13 +7,11 @@ variable "ibmcloud_api_key" {
 variable "region" {
   type        = string
   description = "Region to provision all resources created by this example"
-  default     = "us-south"
 }
 
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg-default"
 }
 
 variable "vpc_id" {
@@ -96,12 +94,6 @@ variable "access_tags" {
   description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
   type        = list(string)
   default     = []
-}
-
-variable "vpc_name" {
-  type        = string
-  description = "Name of the VPC to be created"
-  default     = "vpc"
 }
 
 variable "add_ibm_cloud_internal_rules" {

@@ -2,6 +2,7 @@
 
 A default example that uses the module's default variable values.
 This example uses the IBM Cloud Terraform provider to create this infrastructure:
+
  - A resource group, if one is not passed in.
  - A VPC, if one is not passed in.
  - A security group, if one is not passed in

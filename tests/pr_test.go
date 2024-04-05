@@ -100,6 +100,7 @@ func TestRunSGTargetExample(t *testing.T) {
 			"access_tags":                  permanentResources["accessTags"],
 			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 			"add_ibm_cloud_internal_rules": false,
+			"zone":                         "us-south-1",
 		},
 	})
 
@@ -138,6 +139,7 @@ func TestRunSGTargetExampleNoRules(t *testing.T) {
 		TerraformVars: map[string]interface{}{
 			"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 			"security_group_rules": []map[string]interface{}{},
+			"zone":                 "us-south-1",
 		},
 	})
 

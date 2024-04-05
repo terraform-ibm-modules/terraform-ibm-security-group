@@ -9,13 +9,11 @@ variable "ibmcloud_api_key" {
 variable "region" {
   type        = string
   description = "Region to provision all resources created by this example"
-  default     = "us-south"
 }
 
 variable "prefix" {
   type        = string
   description = "Prefix to append to all resources created by this example"
-  default     = "test-sg-tar-ex"
 }
 
 variable "resource_group" {
@@ -66,17 +64,10 @@ variable "vpc_id" {
   default     = null
 }
 
-variable "vpc_name" {
-  type        = string
-  description = "Name of the VPC to be created"
-  default     = "vpc"
-}
-
 # Subnet variables
 variable "zone" {
   type        = string
   description = "The subnet zone name"
-  default     = "us-south-1"
 }
 
 variable "total_ipv4_address_count" {

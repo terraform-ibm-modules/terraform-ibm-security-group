@@ -4,7 +4,7 @@
 
 output "resource_group" {
   description = "Resource group created"
-  value       = var.resource_group != null ? data.ibm_resource_group.existing_resource_group : ibm_resource_group.resource_group
+  value       = module.resource_group.resource_group_id
 }
 
 output "vpc_id" {
