@@ -53,4 +53,3 @@ module "create_sgr_rule" {
   access_tags                  = var.access_tags
   tags                         = var.resource_tags
 }
-
