@@ -106,7 +106,6 @@ func TestRunAddRulesExample(t *testing.T) {
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
 			"access_tags": permanentResources["accessTags"],
-			"region":      "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 		},
 	})
 
