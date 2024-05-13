@@ -41,7 +41,8 @@ func setupOptions(t *testing.T, dir string, prefix string) *testhelper.TestOptio
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"access_tags": permanentResources["accessTags"],
+			"access_tags":                  permanentResources["accessTags"],
+			"add_ibm_cloud_internal_rules": true,
 		},
 	})
 
@@ -69,17 +70,6 @@ func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 		TerraformVars: map[string]interface{}{
 			"access_tags":                  permanentResources["accessTags"],
 			"add_ibm_cloud_internal_rules": false,
-			"security_group_rules": []map[string]interface{}{
-				{
-					"name":      "sgr-tcp",
-					"direction": "inbound",
-					"remote":    "0.0.0.0/0",
-					"tcp": map[string]interface{}{
-						"port_min": 8080,
-						"port_max": 8080,
-					},
-				},
-			},
 		},
 	})
 
