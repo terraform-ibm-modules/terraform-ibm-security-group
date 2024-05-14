@@ -5,7 +5,7 @@
 
 module "resource_group" {
   source  = "terraform-ibm-modules/resource-group/ibm"
-  version = "1.1.4"
+  version = "1.1.5"
   # if an existing resource group is not set (null) create a new one using prefix
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
@@ -17,9 +17,8 @@ module "resource_group" {
 ##############################################################################
 
 module "vpc" {
-  count             = var.vpc_id != null ? 0 : 1
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  version           = "7.13.2"
+  version           = "7.18.0"
   resource_group_id = module.resource_group.resource_group_id
   region            = var.region
   prefix            = var.prefix
@@ -31,14 +30,47 @@ module "vpc" {
 # Update security group
 ##############################################################################
 
+locals {
+  # some various types of typical rules
+  sg_rules = [{
+    name      = "allow-all-inbound"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    }, {
+    name      = "sgr-tcp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    tcp = {
+      port_min = 8080
+      port_max = 8080
+    }
+    }, {
+    name      = "sgr-udp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    udp = {
+      port_min = 805
+      port_max = 807
+    }
+    }, {
+    name      = "sgr-icmp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    icmp = {
+      code = 20
+      type = 30
+    }
+  }]
+}
+
 # Main example of wide range of basic rules
 module "create_sgr_rule" {
   source                       = "../.."
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
   security_group_name          = "${var.prefix}-1"
-  security_group_rules         = var.security_group_rules
+  security_group_rules         = local.sg_rules
   resource_group               = module.resource_group.resource_group_id
-  vpc_id                       = module.vpc[0].vpc_id
+  vpc_id                       = module.vpc.vpc_id
   access_tags                  = var.access_tags
   tags                         = var.resource_tags
 }
@@ -55,7 +87,7 @@ module "create_sgr_rule1" {
     remote    = module.create_sgr_rule.security_group_id
   }]
   resource_group = module.resource_group.resource_group_id
-  vpc_id         = module.vpc[0].vpc_id
+  vpc_id         = module.vpc.vpc_id
   access_tags    = var.access_tags
   tags           = var.resource_tags
 }
@@ -72,7 +104,7 @@ module "create_sgr_rule2" {
     remote    = module.create_sgr_rule2.security_group_id_for_ref
   }]
   resource_group = module.resource_group.resource_group_id
-  vpc_id         = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  vpc_id         = module.vpc.vpc_id
   access_tags    = var.access_tags
   tags           = var.resource_tags
 }

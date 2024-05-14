@@ -57,25 +57,6 @@ variable "security_group_rules" {
   }]
 }
 
-# VPC variables
-variable "vpc_id" {
-  type        = string
-  description = "ID of the VPC"
-  default     = null
-}
-
-# Subnet variables
-variable "zone" {
-  type        = string
-  description = "The subnet zone name"
-}
-
-variable "total_ipv4_address_count" {
-  type        = number
-  description = "(Optional) The IPv4 range of the subnet. Either ipv4_cidr_block or total_ipv4_address_count input must be provided in the resource"
-  default     = 256
-}
-
 variable "access_tags" {
   description = "A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)"
   type        = list(string)
@@ -86,10 +67,4 @@ variable "resource_tags" {
   type        = list(string)
   description = "Optional list of tags to be added to created resources"
   default     = []
-}
-
-variable "add_ibm_cloud_internal_rules" {
-  description = "Add IBM cloud Internal rules to the provided security group rules"
-  type        = bool
-  default     = false
 }

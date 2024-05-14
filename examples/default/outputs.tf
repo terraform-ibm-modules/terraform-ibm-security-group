@@ -7,11 +7,6 @@ output "resource_group" {
   value       = module.resource_group.resource_group_id
 }
 
-output "vpc_id" {
-  description = "VPC where the security group rules are created"
-  value       = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
-}
-
 output "security_group_rules" {
   description = "Security group rules created"
   value       = module.create_sgr_rule.security_group_rule
