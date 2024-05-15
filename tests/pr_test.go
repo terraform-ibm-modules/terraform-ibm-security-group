@@ -41,7 +41,8 @@ func setupOptions(t *testing.T, dir string, prefix string) *testhelper.TestOptio
 		Prefix:        prefix,
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"access_tags": permanentResources["accessTags"],
+			"access_tags":                  permanentResources["accessTags"],
+			"add_ibm_cloud_internal_rules": true,
 		},
 	})
 
@@ -69,17 +70,6 @@ func TestRunDefaultExampleWithoutIBMRules(t *testing.T) {
 		TerraformVars: map[string]interface{}{
 			"access_tags":                  permanentResources["accessTags"],
 			"add_ibm_cloud_internal_rules": false,
-			"security_group_rules": []map[string]interface{}{
-				{
-					"name":      "sgr-tcp",
-					"direction": "inbound",
-					"remote":    "0.0.0.0/0",
-					"tcp": map[string]interface{}{
-						"port_min": 8080,
-						"port_max": 8080,
-					},
-				},
-			},
 		},
 	})
 
@@ -97,10 +87,7 @@ func TestRunSGTargetExample(t *testing.T) {
 		Prefix:        "test-sgr-target",
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"access_tags":                  permanentResources["accessTags"],
-			"region":                       "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
-			"add_ibm_cloud_internal_rules": false,
-			"zone":                         "us-south-1",
+			"access_tags": permanentResources["accessTags"],
 		},
 	})
 
@@ -119,7 +106,6 @@ func TestRunAddRulesExample(t *testing.T) {
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
 			"access_tags": permanentResources["accessTags"],
-			"region":      "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 		},
 	})
 
@@ -137,9 +123,7 @@ func TestRunSGTargetExampleNoRules(t *testing.T) {
 		Prefix:        "test-sgr-target-no-rules",
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"region":               "us-south", // ensuring VPC and subnet are created in same region to avoid invalid zone error
 			"security_group_rules": []map[string]interface{}{},
-			"zone":                 "us-south-1",
 		},
 	})
 

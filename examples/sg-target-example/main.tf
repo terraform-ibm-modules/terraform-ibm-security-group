@@ -18,7 +18,6 @@ module "resource_group" {
 ##############################################################################
 
 module "vpc" {
-  count             = var.vpc_id != null ? 0 : 1
   source            = "terraform-ibm-modules/landing-zone-vpc/ibm"
   version           = "7.18.0"
   resource_group_id = module.resource_group.resource_group_id
@@ -29,26 +28,14 @@ module "vpc" {
 }
 
 ##############################################################################
-# Create subnet
-##############################################################################
-
-resource "ibm_is_subnet" "subnet" {
-  name                     = "${var.prefix}-subnet"
-  vpc                      = module.vpc[0].vpc_id
-  zone                     = var.zone
-  total_ipv4_address_count = var.total_ipv4_address_count
-  resource_group           = module.resource_group.resource_group_id
-}
-
-##############################################################################
 # Create application load balancer
 ##############################################################################
 
-
 resource "ibm_is_lb" "sg_lb" {
-  name    = "${var.prefix}-load-balancer"
-  subnets = [ibm_is_subnet.subnet.id]
-  type    = "private"
+  name           = "${var.prefix}-load-balancer"
+  resource_group = module.resource_group.resource_group_id
+  subnets        = module.vpc.subnet_ids
+  type           = "private"
 }
 
 ##############################################################################
@@ -57,11 +44,11 @@ resource "ibm_is_lb" "sg_lb" {
 
 module "create_sgr_rule" {
   source                       = "../.."
-  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+  add_ibm_cloud_internal_rules = false
   security_group_name          = "${var.prefix}-target"
   security_group_rules         = var.security_group_rules
   resource_group               = module.resource_group.resource_group_id
-  vpc_id                       = module.vpc[0].vpc_id
+  vpc_id                       = module.vpc.vpc_id
   target_ids                   = [ibm_is_lb.sg_lb.id]
   access_tags                  = var.access_tags
   tags                         = var.resource_tags
