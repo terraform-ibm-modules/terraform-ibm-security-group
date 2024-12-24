@@ -63,48 +63,112 @@ locals {
   }]
 }
 
+# TO BE DELETED BEFORE MERGING - PREVIOUS VERSION BEFORE REFACTORING
+# # Main example of wide range of basic rules
+# module "create_sgr_rule" {
+#   source                       = "../.."
+#   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+#   security_group_name          = "${var.prefix}-1"
+#   security_group_rules         = local.sg_rules
+#   resource_group               = module.resource_group.resource_group_id
+#   vpc_id                       = module.vpc.vpc_id
+#   access_tags                  = var.access_tags
+#   tags                         = var.resource_tags
+# }
+
 # Main example of wide range of basic rules
-module "create_sgr_rule" {
-  source                       = "../.."
-  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
-  security_group_name          = "${var.prefix}-1"
-  security_group_rules         = local.sg_rules
-  resource_group               = module.resource_group.resource_group_id
-  vpc_id                       = module.vpc.vpc_id
-  access_tags                  = var.access_tags
-  tags                         = var.resource_tags
+module "create_sgr0" {
+  source              = "../.."
+  security_group_name = "${var.prefix}-1"
+  resource_group      = module.resource_group.resource_group_id
+  vpc_id              = module.vpc.vpc_id
+  access_tags         = var.access_tags
+  tags                = var.resource_tags
 }
 
-# Example of creating new SG and rule, with the rule allowing access from another existing security group
-module "create_sgr_rule1" {
-  source                       = "../.."
+module "create_sgr0_rules" {
+  source                       = "../../modules/security-group-rules"
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
-  security_group_name          = "${var.prefix}-2"
+  security_group_rules         = local.sg_rules
+  sg_id                        = module.create_sgr0.security_group_id
+}
+
+# TO BE DELETED BEFORE MERGING - PREVIOUS VERSION BEFORE REFACTORING
+# # Example of creating new SG and rule, with the rule allowing access from another existing security group
+# module "create_sgr_rule1" {
+#   source                       = "../.."
+#   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+#   security_group_name          = "${var.prefix}-2"
+#   # sg rule referencing a security group
+#   security_group_rules = [{
+#     name      = "allow-all-inbound-sg"
+#     direction = "inbound"
+#     remote    = module.create_sgr_rule.security_group_id
+#   }]
+#   resource_group = module.resource_group.resource_group_id
+#   vpc_id         = module.vpc.vpc_id
+#   access_tags    = var.access_tags
+#   tags           = var.resource_tags
+# }
+
+# Example of creating new SG and rule, with the rule allowing access from another existing security group
+module "create_sgr1" {
+  source              = "../.."
+  security_group_name = "${var.prefix}-2"
+  resource_group      = module.resource_group.resource_group_id
+  vpc_id              = module.vpc.vpc_id
+  access_tags         = var.access_tags
+  tags                = var.resource_tags
+}
+
+module "create_sgr1_rules" {
+  source                       = "../../modules/security-group-rules"
+  add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
   # sg rule referencing a security group
   security_group_rules = [{
     name      = "allow-all-inbound-sg"
     direction = "inbound"
-    remote    = module.create_sgr_rule.security_group_id
+    remote    = module.create_sgr0.security_group_id
   }]
-  resource_group = module.resource_group.resource_group_id
-  vpc_id         = module.vpc.vpc_id
-  access_tags    = var.access_tags
-  tags           = var.resource_tags
+  sg_id = module.create_sgr1.security_group_id
 }
 
+# TO BE DELETED BEFORE MERGING - PREVIOUS VERSION BEFORE REFACTORING
 # Example of new SG and rule, with the rule referencing the same SG that was created (self-reference)
-module "create_sgr_rule2" {
-  source                       = "../.."
+# module "create_sgr_rule2" {
+#   source                       = "../.."
+#   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
+#   security_group_name          = "${var.prefix}-3"
+#   # sg rule referencing its own parent sg
+#   security_group_rules = [{
+#     name      = "allow-all-inbound-same-sg"
+#     direction = "inbound"
+#     remote    = module.create_sgr_rule2.security_group_id_for_ref
+#   }]
+#   resource_group = module.resource_group.resource_group_id
+#   vpc_id         = module.vpc.vpc_id
+#   access_tags    = var.access_tags
+#   tags           = var.resource_tags
+# }
+
+# Example of new SG and rule, with the rule referencing the same SG that was created (self-reference)
+module "create_sgr2" {
+  source              = "../.."
+  security_group_name = "${var.prefix}-3"
+  resource_group      = module.resource_group.resource_group_id
+  vpc_id              = module.vpc.vpc_id
+  access_tags         = var.access_tags
+  tags                = var.resource_tags
+}
+
+module "create_sgr2_rules" {
+  source                       = "../../modules/security-group-rules"
   add_ibm_cloud_internal_rules = var.add_ibm_cloud_internal_rules
-  security_group_name          = "${var.prefix}-3"
   # sg rule referencing its own parent sg
   security_group_rules = [{
     name      = "allow-all-inbound-same-sg"
     direction = "inbound"
-    remote    = module.create_sgr_rule2.security_group_id_for_ref
+    remote    = module.create_sgr2.security_group_id
   }]
-  resource_group = module.resource_group.resource_group_id
-  vpc_id         = module.vpc.vpc_id
-  access_tags    = var.access_tags
-  tags           = var.resource_tags
+  sg_id = module.create_sgr2.security_group_id
 }
