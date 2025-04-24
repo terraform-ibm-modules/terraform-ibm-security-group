@@ -13,8 +13,8 @@ locals {
   validation_message = coalesce(
     local.sg_name_null_and_use_sg_true ? "existing_security_group_name must be set when use_existing_security_group is set." : null,
     local.sg_name_set_and_use_sg_false ? "use_existing_security_group must be set when existing_security_group_name is set." : null,
-    local.sg_id_null_and_use_sg_true ? "existing_security_group_name must be set when use_existing_security_group is set." : null,
-    local.sg_id_set_and_use_sg_false ? "use_existing_security_group must be set when existing_security_group_name is set." : null,
+    local.sg_id_null_and_use_sg_true ? "existing_security_group_id must be set when use_existing_security_group_id is set." : null,
+    local.sg_id_set_and_use_sg_false ? "use_existing_security_group_id must be set when existing_security_group_id is set." : null,
     local.no_sg_name_and_no_vpc_id ? "VPC ID is required when creating a new security group." : null,
     local.mutually_exclusive ? "existing_security_group_name and existing_security_group_id are mutually exclusive. Set either one or the other (or none)" :
     "Valid configuration."
