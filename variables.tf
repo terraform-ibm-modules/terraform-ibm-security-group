@@ -12,6 +12,18 @@ variable "use_existing_security_group" {
   description = "If set, the modules modifies the specified existing_security_group_name."
   type        = bool
   default     = false
+  validation {
+    condition     = (var.use_existing_security_group == false && var.use_existing_security_group_id == false && var.vpc_id == null) ? false : true
+    error_message = "VPC ID is required when creating a new security group."
+  }
+  validation {
+    condition     = (var.existing_security_group_name == null && var.use_existing_security_group) ? false : true
+    error_message = "existing_security_group_name must be set when use_existing_security_group is set."
+  }
+  validation {
+    condition     = (var.existing_security_group_name != null && !var.use_existing_security_group) ? false : true
+    error_message = "use_existing_security_group must be set when existing_security_group_name is set."
+  }
 }
 
 variable "existing_security_group_name" {
@@ -24,12 +36,24 @@ variable "use_existing_security_group_id" {
   description = "If set, the modules modifies the specified existing_security_group_id."
   type        = bool
   default     = false
+  validation {
+    condition     = (var.existing_security_group_id == null && var.use_existing_security_group_id) ? false : true
+    error_message = "existing_security_group_id must be set when use_existing_security_group_id is set."
+  }
+  validation {
+    condition     = (var.existing_security_group_id != null && !var.use_existing_security_group_id) ? false : true
+    error_message = "use_existing_security_group_id must be set when existing_security_group_id is set."
+  }
 }
 
 variable "existing_security_group_id" {
   description = "Id of an existing security group. Mutually exclusive with `existing_security_group_name`. If set, rules will be added to the specified security group."
   type        = string
   default     = null
+  validation {
+    condition     = (var.existing_security_group_name != null && var.existing_security_group_id != null) ? false : true
+    error_message = "existing_security_group_name and existing_security_group_id are mutually exclusive. Set either one or the other (or none)"
+  }
 }
 
 variable "vpc_id" {
