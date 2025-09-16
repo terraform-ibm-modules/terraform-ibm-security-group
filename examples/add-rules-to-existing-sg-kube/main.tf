@@ -1,5 +1,5 @@
 ##############################################################################
-# Find VPC ID based on the inputed cluster_id
+# Find VPC ID based on the inputted cluster_id
 ##############################################################################
 
 locals {
@@ -36,9 +36,11 @@ module "add_rules_to_workernodes_sg" {
   use_existing_security_group  = true
   existing_security_group_name = local.name_of_worker_nodes_sg
   security_group_rules = [{
-    name      = "allow-example-inbound"
-    direction = "inbound"
-    remote    = "192.0.2.0/24"
+    name       = "allow-example-inbound"
+    direction  = "inbound"
+    remote     = "192.0.2.0/24"
+    local      = "0.0.0.0/0"
+    ip_version = "ipv4"
   }]
   access_tags = var.access_tags
   tags        = var.resource_tags
@@ -54,9 +56,11 @@ module "add_rules_to_lbvpc_sg" {
   use_existing_security_group  = true
   existing_security_group_name = local.name_of_lb_vpe_sg
   security_group_rules = [{
-    name      = "allow-example-inbound"
-    direction = "inbound"
-    remote    = "192.0.2.0/24"
+    name       = "allow-example-inbound"
+    direction  = "inbound"
+    remote     = "192.0.2.0/24"
+    local      = "0.0.0.0/0"
+    ip_version = "ipv4"
     tcp = {
       port_min = 443
       port_max = 443

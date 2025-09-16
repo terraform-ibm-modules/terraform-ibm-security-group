@@ -27,9 +27,11 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      name      = string
-      direction = string
-      remote    = string
+      name       = string
+      direction  = string
+      remote     = string
+      local      = optional(string)
+      ip_version = optional(string)
       tcp = optional(
         object({
           port_max = optional(number)
@@ -51,9 +53,12 @@ variable "security_group_rules" {
     })
   )
   default = [{
-    name      = "allow-all-inbound"
-    direction = "inbound"
-    remote    = "0.0.0.0/0"
+    name       = "allow-all-inbound"
+    direction  = "inbound"
+    remote     = "0.0.0.0/0"
+    local      = "0.0.0.0/0"
+    ip_version = "ipv4"
+
   }]
 }
 

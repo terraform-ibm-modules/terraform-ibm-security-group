@@ -102,9 +102,11 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      name      = string
-      direction = optional(string, "inbound")
-      remote    = string
+      name       = string
+      direction  = optional(string, "inbound")
+      remote     = string
+      local      = optional(string)
+      ip_version = optional(string)
       tcp = optional(
         object({
           port_max = optional(number)
