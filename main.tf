@@ -6,40 +6,44 @@ locals {
   # IaaS and PaaS Rules
   ibm_cloud_internal_rules = [
     {
-      name      = "ibmflow-iaas-outbound"
-      direction = "outbound"
-      remote    = "161.26.0.0/16"
-      local     = null
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-iaas-outbound"
+      direction  = "outbound"
+      remote     = "161.26.0.0/16"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-iaas-inbound"
-      direction = "inbound"
-      remote    = "161.26.0.0/16"
-      local     = null
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-iaas-inbound"
+      direction  = "inbound"
+      remote     = "161.26.0.0/16"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-paas-outbound"
-      direction = "outbound"
-      remote    = "166.8.0.0/14"
-      local     = null
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-paas-outbound"
+      direction  = "outbound"
+      remote     = "166.8.0.0/14"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-paas-inbound"
-      direction = "inbound"
-      remote    = "166.8.0.0/14"
-      local     = null
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-paas-inbound"
+      direction  = "inbound"
+      remote     = "166.8.0.0/14"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     }
   ]
 
