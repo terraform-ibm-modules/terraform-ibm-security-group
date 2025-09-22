@@ -103,8 +103,8 @@ variable "security_group_rules" {
   type = list(
     object({
       name       = string
-      direction  = optional(string, "inbound")
-      remote     = string
+      direction  = string
+      remote     = optional(string)
       local      = optional(string)
       ip_version = optional(string)
       tcp = optional(

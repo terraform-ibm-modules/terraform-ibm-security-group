@@ -29,7 +29,7 @@ variable "security_group_rules" {
     object({
       name       = string
       direction  = string
-      remote     = string
+      remote     = optional(string)
       local      = optional(string)
       ip_version = optional(string)
       tcp = optional(
