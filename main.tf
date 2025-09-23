@@ -6,7 +6,6 @@ locals {
   # IaaS and PaaS Rules
   ibm_cloud_internal_rules = [
     {
-      name       = "ibmflow-iaas-outbound"
       direction  = "outbound"
       remote     = "161.26.0.0/16"
       local      = null
@@ -16,7 +15,6 @@ locals {
       icmp       = {}
     },
     {
-      name       = "ibmflow-iaas-inbound"
       direction  = "inbound"
       remote     = "161.26.0.0/16"
       local      = null
@@ -26,7 +24,6 @@ locals {
       icmp       = {}
     },
     {
-      name       = "ibmflow-paas-outbound"
       direction  = "outbound"
       remote     = "166.8.0.0/14"
       local      = null
@@ -36,7 +33,6 @@ locals {
       icmp       = {}
     },
     {
-      name       = "ibmflow-paas-inbound"
       direction  = "inbound"
       remote     = "166.8.0.0/14"
       local      = null
@@ -103,8 +99,8 @@ resource "ibm_is_security_group_target" "sg_target" {
 
 resource "ibm_is_security_group_rule" "security_group_rule" {
   for_each = {
-    for rule in local.all_rules :
-    (rule.name) => rule
+    for idx, rule in local.all_rules :
+    idx => rule
   }
   group      = local.sg_id
   direction  = each.value.direction

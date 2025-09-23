@@ -33,11 +33,9 @@ module "vpc" {
 locals {
   # some various types of typical rules
   sg_rules = [{
-    name      = "allow-all-inbound"
     direction = "inbound"
     remote    = "0.0.0.0/0"
     }, {
-    name      = "sgr-tcp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
     tcp = {
@@ -45,7 +43,6 @@ locals {
       port_max = 8080
     }
     }, {
-    name      = "sgr-udp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
     udp = {
@@ -53,7 +50,6 @@ locals {
       port_max = 807
     }
     }, {
-    name      = "sgr-icmp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
     icmp = {
@@ -82,7 +78,6 @@ module "create_sgr_rule1" {
   security_group_name          = "${var.prefix}-2"
   # sg rule referencing a security group
   security_group_rules = [{
-    name      = "allow-all-inbound-sg"
     direction = "inbound"
     remote    = module.create_sgr_rule.security_group_id
   }]
@@ -99,7 +94,6 @@ module "create_sgr_rule2" {
   security_group_name          = "${var.prefix}-3"
   # sg rule referencing its own parent sg
   security_group_rules = [{
-    name      = "allow-all-inbound-same-sg"
     direction = "inbound"
     remote    = module.create_sgr_rule2.security_group_id_for_ref
   }]
