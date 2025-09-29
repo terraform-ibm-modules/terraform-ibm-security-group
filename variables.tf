@@ -106,7 +106,7 @@ variable "security_group_rules" {
       direction  = string
       remote     = optional(string)
       local      = optional(string)
-      ip_version = optional(string)
+      ip_version = optional(string, "ipv4")
       tcp = optional(
         object({
           port_max = optional(number)
@@ -169,6 +169,14 @@ variable "security_group_rules" {
         ) > 1
       ])
     )) == 0 # Checks for length. If all fields all correct, array will be empty
+  }
+
+  validation {
+    error_message = "ip_version must be `ipv4` (default is ipv4 if not specified)."
+    condition = alltrue([
+      for rule in var.security_group_rules :
+      rule.ip_version == null || rule.ip_version == "ipv4"
+    ])
   }
 }
 
