@@ -6,36 +6,44 @@ locals {
   # IaaS and PaaS Rules
   ibm_cloud_internal_rules = [
     {
-      name      = "ibmflow-iaas-outbound"
-      direction = "outbound"
-      remote    = "161.26.0.0/16"
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-iaas-outbound"
+      direction  = "outbound"
+      remote     = "161.26.0.0/16"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-iaas-inbound"
-      direction = "inbound"
-      remote    = "161.26.0.0/16"
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-iaas-inbound"
+      direction  = "inbound"
+      remote     = "161.26.0.0/16"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-paas-outbound"
-      direction = "outbound"
-      remote    = "166.8.0.0/14"
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-paas-outbound"
+      direction  = "outbound"
+      remote     = "166.8.0.0/14"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     },
     {
-      name      = "ibmflow-paas-inbound"
-      direction = "inbound"
-      remote    = "166.8.0.0/14"
-      tcp       = {}
-      udp       = {}
-      icmp      = {}
+      name       = "ibmflow-paas-inbound"
+      direction  = "inbound"
+      remote     = "166.8.0.0/14"
+      local      = null
+      ip_version = null
+      tcp        = {}
+      udp        = {}
+      icmp       = {}
     }
   ]
 
@@ -98,12 +106,14 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
     for rule in local.all_rules :
     (rule.name) => rule
   }
-  group     = local.sg_id
-  direction = each.value.direction
-  remote    = each.value.remote
+  group      = local.sg_id
+  direction  = each.value.direction
+  remote     = each.value.remote
+  local      = each.value.local
+  ip_version = each.value.ip_version
 
   ##############################################################################
-  # Dynamicaly create ICMP Block
+  # Dynamically create ICMP Block
   ##############################################################################
 
   dynamic "icmp" {
@@ -124,7 +134,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
       ? [] # if all values null empty array
       : [each.value]
     )
-    # Conditianally add content if sg has icmp
+    # Conditionally add content if sg has icmp
     content {
       type = lookup(
         each.value["icmp"],
