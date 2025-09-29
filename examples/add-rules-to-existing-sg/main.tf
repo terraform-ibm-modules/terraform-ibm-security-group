@@ -48,6 +48,7 @@ module "add_rules_to_sg" {
   use_existing_security_group  = true
   existing_security_group_name = local.name_of_sg_to_update
   security_group_rules = [{
+    name       = "allow-example-inbound"
     direction  = "inbound"
     remote     = "192.0.2.0/24"
     local      = "0.0.0.0/0"

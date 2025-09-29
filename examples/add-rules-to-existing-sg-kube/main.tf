@@ -36,6 +36,7 @@ module "add_rules_to_workernodes_sg" {
   use_existing_security_group  = true
   existing_security_group_name = local.name_of_worker_nodes_sg
   security_group_rules = [{
+    name       = "allow-example-inbound"
     direction  = "inbound"
     remote     = "192.0.2.0/24"
     local      = "0.0.0.0/0"
@@ -55,6 +56,7 @@ module "add_rules_to_lbvpc_sg" {
   use_existing_security_group  = true
   existing_security_group_name = local.name_of_lb_vpe_sg
   security_group_rules = [{
+    name       = "allow-example-inbound"
     direction  = "inbound"
     remote     = "192.0.2.0/24"
     local      = "0.0.0.0/0"
