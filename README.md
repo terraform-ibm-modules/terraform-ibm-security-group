@@ -22,10 +22,10 @@ See the following [examples](#Examples) section for code that illustrates these 
 ## Overview
 * [terraform-ibm-security-group](#terraform-ibm-security-group)
 * [Examples](./examples)
-    * [Default example](./examples/default)
-    * [Example to add security group rules to an existing security group (kube)](./examples/add-rules-to-existing-sg-kube)
-    * [Example to add security group rules to an existing security group](./examples/add-rules-to-existing-sg)
-    * [Example to attach resources to security group](./examples/sg-target-example)
+    * <div style="display: inline-block;"><a href="./examples/add-rules-to-existing-sg">Example to add security group rules to an existing security group</a></div> <div style="display: inline-block; vertical-align: middle;"><a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=sg-add-rules-to-existing-sg-example&repository=github.com/terraform-ibm-modules/terraform-ibm-security-group/tree/main/examples/add-rules-to-existing-sg" target="_blank"><img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" alt="Deploy to IBM Cloud button"></a></div>
+    * <div style="display: inline-block;"><a href="./examples/add-rules-to-existing-sg-kube">Example to add security group rules to an existing security group (kube)</a></div> <div style="display: inline-block; vertical-align: middle;"><a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=sg-add-rules-to-existing-sg-kube-example&repository=github.com/terraform-ibm-modules/terraform-ibm-security-group/tree/main/examples/add-rules-to-existing-sg-kube" target="_blank"><img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" alt="Deploy to IBM Cloud button"></a></div>
+    * <div style="display: inline-block;"><a href="./examples/default">Default example</a></div> <div style="display: inline-block; vertical-align: middle;"><a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=sg-default-example&repository=github.com/terraform-ibm-modules/terraform-ibm-security-group/tree/main/examples/default" target="_blank"><img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" alt="Deploy to IBM Cloud button"></a></div>
+    * <div style="display: inline-block;"><a href="./examples/sg-target-example">Example to attach resources to security group</a></div> <div style="display: inline-block; vertical-align: middle;"><a href="https://cloud.ibm.com/schematics/workspaces/create?workspace_name=sg-sg-target-example-example&repository=github.com/terraform-ibm-modules/terraform-ibm-security-group/tree/main/examples/sg-target-example" target="_blank"><img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" alt="Deploy to IBM Cloud button"></a></div>
 * [Contributing](#contributing)
 <!-- END OVERVIEW HOOK -->
 
