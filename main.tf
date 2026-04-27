@@ -111,6 +111,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
   remote     = each.value.remote
   local      = each.value.local
   ip_version = each.value.ip_version
+  name       = each.value.name
 
   ##############################################################################
   # Dynamically create ICMP Block
