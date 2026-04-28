@@ -36,7 +36,6 @@ locals {
     name      = "allow-all-inbound"
     direction = "inbound"
     remote    = "0.0.0.0/0"
-    protocol  = "all"
     }, {
     name      = "sgr-tcp"
     direction = "inbound"
@@ -56,8 +55,13 @@ locals {
     direction = "inbound"
     remote    = "0.0.0.0/0"
     protocol  = "icmp"
-    icmp_type = 30
-    icmp_code = 20
+    type      = 30
+    code      = 20
+    }, {
+    name      = "sgr-icmp-tcp-udp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    protocol  = "icmp_tcp_udp"
   }]
 }
 

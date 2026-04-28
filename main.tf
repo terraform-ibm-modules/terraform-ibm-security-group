@@ -11,11 +11,11 @@ locals {
       remote     = "161.26.0.0/16"
       local      = null
       ip_version = null
-      protocol   = "all"
+      protocol   = null
       port_min   = null
       port_max   = null
-      icmp_type  = null
-      icmp_code  = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-iaas-inbound"
@@ -23,11 +23,11 @@ locals {
       remote     = "161.26.0.0/16"
       local      = null
       ip_version = null
-      protocol   = "all"
+      protocol   = null
       port_min   = null
       port_max   = null
-      icmp_type  = null
-      icmp_code  = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-paas-outbound"
@@ -35,11 +35,11 @@ locals {
       remote     = "166.8.0.0/14"
       local      = null
       ip_version = null
-      protocol   = "all"
+      protocol   = null
       port_min   = null
       port_max   = null
-      icmp_type  = null
-      icmp_code  = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-paas-inbound"
@@ -47,11 +47,11 @@ locals {
       remote     = "166.8.0.0/14"
       local      = null
       ip_version = null
-      protocol   = "all"
+      protocol   = null
       port_min   = null
       port_max   = null
-      icmp_type  = null
-      icmp_code  = null
+      type       = null
+      code       = null
     }
   ]
 
@@ -124,8 +124,8 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
   protocol = each.value.protocol
   port_min = each.value.port_min
   port_max = each.value.port_max
-  type     = each.value.icmp_type
-  code     = each.value.icmp_code
+  type     = each.value.type
+  code     = each.value.code
 }
 
 ##############################################################################

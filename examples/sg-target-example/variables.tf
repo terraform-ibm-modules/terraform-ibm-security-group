@@ -35,8 +35,8 @@ variable "security_group_rules" {
       protocol   = optional(string)
       port_min   = optional(number)
       port_max   = optional(number)
-      icmp_type  = optional(number)
-      icmp_code  = optional(number)
+      type       = optional(number)
+      code       = optional(number)
     })
   )
   default = [{
@@ -45,7 +45,6 @@ variable "security_group_rules" {
     remote     = "0.0.0.0/0"
     local      = "0.0.0.0/0"
     ip_version = "ipv4"
-    protocol   = "all"
   }]
 }
 
