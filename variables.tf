@@ -102,7 +102,7 @@ variable "security_group_rules" {
   description = "A list of security group rules to be added to the default vpc security group"
   type = list(
     object({
-      name       = string
+      name       = optional(string)
       direction  = string
       remote     = optional(string)
       local      = optional(string)
@@ -142,13 +142,13 @@ variable "security_group_rules" {
   }
 
   validation {
-    error_message = "Security group rule names must match the regex pattern ^([a-z]|[a-z][-a-z0-9_]*[a-z0-9])$."
+    error_message = "Security group rule names must match the regex pattern ^([a-z]|[a-z][-a-z0-9_]*[a-z0-9])$ when specified."
     condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
       flatten([
         # Check through rules
         for rule in var.security_group_rules :
-        # Return false if direction is not valid
-        false if !can(regex("^([a-z]|[a-z][-a-z0-9_]*[a-z0-9])$", rule.name))
+        # Return false if name is set and is not valid
+        false if(rule.name != null && !can(regex("^([a-z]|[a-z][-a-z0-9_]*[a-z0-9])$", rule.name)))
       ])
     )) == 0
   }

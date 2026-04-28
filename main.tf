@@ -47,8 +47,13 @@ locals {
     }
   ]
 
-  # concatenate IBM internal rules and customer security group rules depending on add_ibm_cloud_internal_rules
-  all_rules = concat(var.security_group_rules, var.add_ibm_cloud_internal_rules ? local.ibm_cloud_internal_rules : [])
+  # add default names for customer rules when not provided, then concatenate IBM internal rules if requested
+  all_rules = concat([
+    for index, rule in var.security_group_rules :
+    merge(rule, {
+      name = rule.name != null ? rule.name : "rule-${index}"
+    })
+  ], var.add_ibm_cloud_internal_rules ? local.ibm_cloud_internal_rules : [])
 }
 
 ############################################################################
