@@ -107,24 +107,11 @@ variable "security_group_rules" {
       remote     = optional(string)
       local      = optional(string)
       ip_version = optional(string, "ipv4")
-      tcp = optional(
-        object({
-          port_max = optional(number)
-          port_min = optional(number)
-        })
-      )
-      udp = optional(
-        object({
-          port_max = optional(number)
-          port_min = optional(number)
-        })
-      )
-      icmp = optional(
-        object({
-          type = optional(number)
-          code = optional(number)
-        })
-      )
+      protocol   = optional(string)
+      port_min   = optional(number)
+      port_max   = optional(number)
+      type       = optional(number)
+      code       = optional(number)
     })
   )
   default = []
@@ -154,21 +141,27 @@ variable "security_group_rules" {
   }
 
   validation {
-    error_message = "Security group rules can only have one of `icmp`, `udp`, or `tcp`."
-    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
-      # Get flat list of results
-      flatten([
-        # Check through rules
-        for rule in var.security_group_rules :
-        # Return true if there is more than one of `icmp`, `udp`, or `tcp`
-        true if length(
-          [
-            for type in ["tcp", "udp", "icmp"] :
-            true if rule[type] != null
-          ]
-        ) > 1
-      ])
-    )) == 0 # Checks for length. If all fields all correct, array will be empty
+    error_message = "Security group rule protocol must be one of: `tcp`, `udp`, `icmp`, `icmp_tcp_udp`. If not specified, allows all protocols."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : alltrue([
+      for rule in var.security_group_rules :
+      rule.protocol == null || contains(["tcp", "udp", "icmp", "icmp_tcp_udp"], rule.protocol)
+    ])
+  }
+
+  validation {
+    error_message = "When protocol is `tcp` or `udp`, port_min and port_max can be specified. When protocol is `icmp`, type and code can be specified. When protocol is `icmp_tcp_udp` or not specified (null), no port or icmp fields should be set."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : alltrue([
+      for rule in var.security_group_rules :
+      (
+        # If protocol is tcp or udp, type and code should not be set
+        (rule.protocol == "tcp" || rule.protocol == "udp") ? (rule.type == null && rule.code == null) :
+        # If protocol is icmp, port_min and port_max should not be set
+        rule.protocol == "icmp" ? (rule.port_min == null && rule.port_max == null) :
+        # If protocol is icmp_tcp_udp or null, none of the port/icmp fields should be set
+        (rule.protocol == "icmp_tcp_udp" || rule.protocol == null) ? (rule.port_min == null && rule.port_max == null && rule.type == null && rule.code == null) :
+        true
+      )
+    ])
   }
 
   validation {
