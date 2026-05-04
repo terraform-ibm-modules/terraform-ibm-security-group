@@ -55,8 +55,13 @@ locals {
     }
   ]
 
-  # concatenate IBM internal rules and customer security group rules depending on add_ibm_cloud_internal_rules
-  all_rules = concat(var.security_group_rules, var.add_ibm_cloud_internal_rules ? local.ibm_cloud_internal_rules : [])
+  # add default names for customer rules when not provided, then concatenate IBM internal rules if requested
+  all_rules = concat([
+    for index, rule in var.security_group_rules :
+    merge(rule, {
+      name = rule.name != null ? rule.name : "rule-${index}"
+    })
+  ], var.add_ibm_cloud_internal_rules ? local.ibm_cloud_internal_rules : [])
 }
 
 ############################################################################
@@ -119,6 +124,7 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
   remote     = each.value.remote
   local      = each.value.local
   ip_version = each.value.ip_version
+  name       = each.value.name
 
   # Use top-level protocol arguments instead of deprecated nested blocks
   protocol = each.value.protocol
