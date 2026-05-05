@@ -70,7 +70,7 @@ resource "ibm_is_security_group" "sg" {
   vpc            = var.vpc_id
   resource_group = var.resource_group
   access_tags    = var.access_tags
-  tags           = var.tags
+  tags           = var.resource_tags
 }
 
 data "ibm_is_security_group" "existing_sg" {
