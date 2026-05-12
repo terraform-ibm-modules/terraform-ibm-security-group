@@ -149,22 +149,6 @@ variable "security_group_rules" {
   }
 
   validation {
-    error_message = "When protocol is `tcp` or `udp`, port_min and port_max can be specified. When protocol is `icmp`, type and code can be specified. When protocol is `icmp_tcp_udp` or not specified (null), no port or icmp fields should be set."
-    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : alltrue([
-      for rule in var.security_group_rules :
-      (
-        # If protocol is tcp or udp, type and code should not be set
-        (rule.protocol == "tcp" || rule.protocol == "udp") ? (rule.type == null && rule.code == null) :
-        # If protocol is icmp, port_min and port_max should not be set
-        rule.protocol == "icmp" ? (rule.port_min == null && rule.port_max == null) :
-        # If protocol is icmp_tcp_udp or null, none of the port/icmp fields should be set
-        (rule.protocol == "icmp_tcp_udp" || rule.protocol == null) ? (rule.port_min == null && rule.port_max == null && rule.type == null && rule.code == null) :
-        true
-      )
-    ])
-  }
-
-  validation {
     error_message = "ip_version must be `ipv4` (default is ipv4 if not specified)."
     condition = alltrue([
       for rule in var.security_group_rules :
