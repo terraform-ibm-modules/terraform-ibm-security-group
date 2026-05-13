@@ -141,14 +141,6 @@ variable "security_group_rules" {
   }
 
   validation {
-    error_message = "Security group rule protocol must be one of: `tcp`, `udp`, `icmp`, `icmp_tcp_udp`. If not specified, allows all protocols."
-    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : alltrue([
-      for rule in var.security_group_rules :
-      rule.protocol == null || contains(["tcp", "udp", "icmp", "icmp_tcp_udp"], rule.protocol)
-    ])
-  }
-
-  validation {
     error_message = "ip_version must be `ipv4` (default is ipv4 if not specified)."
     condition = alltrue([
       for rule in var.security_group_rules :
