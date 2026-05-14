@@ -11,9 +11,11 @@ locals {
       remote     = "161.26.0.0/16"
       local      = null
       ip_version = null
-      tcp        = {}
-      udp        = {}
-      icmp       = {}
+      protocol   = null
+      port_min   = null
+      port_max   = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-iaas-inbound"
@@ -21,9 +23,11 @@ locals {
       remote     = "161.26.0.0/16"
       local      = null
       ip_version = null
-      tcp        = {}
-      udp        = {}
-      icmp       = {}
+      protocol   = null
+      port_min   = null
+      port_max   = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-paas-outbound"
@@ -31,9 +35,11 @@ locals {
       remote     = "166.8.0.0/14"
       local      = null
       ip_version = null
-      tcp        = {}
-      udp        = {}
-      icmp       = {}
+      protocol   = null
+      port_min   = null
+      port_max   = null
+      type       = null
+      code       = null
     },
     {
       name       = "ibmflow-paas-inbound"
@@ -41,9 +47,11 @@ locals {
       remote     = "166.8.0.0/14"
       local      = null
       ip_version = null
-      tcp        = {}
-      udp        = {}
-      icmp       = {}
+      protocol   = null
+      port_min   = null
+      port_max   = null
+      type       = null
+      code       = null
     }
   ]
 
@@ -118,129 +126,12 @@ resource "ibm_is_security_group_rule" "security_group_rule" {
   ip_version = each.value.ip_version
   name       = each.value.name
 
-  ##############################################################################
-  # Dynamically create ICMP Block
-  ##############################################################################
-
-  dynamic "icmp" {
-
-    # Runs a for each loop, if the rule block contains icmp, it looks through the block
-    # Otherwise the list will be empty
-
-    for_each = (
-      # Only allow creation of icmp rules if all of the keys are not null.
-      # This allows the use of the optional variable in landing zone patterns
-      # to convert to a single typed list by adding `null` as the value.
-      each.value.icmp == null
-      ? []
-      : length([
-        for value in ["type", "code"] :
-        true if lookup(each.value["icmp"], value, null) == null
-      ]) == 2
-      ? [] # if all values null empty array
-      : [each.value]
-    )
-    # Conditionally add content if sg has icmp
-    content {
-      type = lookup(
-        each.value["icmp"],
-        "type",
-        null
-      )
-      code = lookup(
-        each.value["icmp"],
-        "code",
-        null
-      )
-    }
-  }
-
-  ##############################################################################
-
-  ##############################################################################
-  # Dynamically create TCP Block
-  ##############################################################################
-
-  dynamic "tcp" {
-
-    # Runs a for each loop, if the rule block contains tcp, it looks through the block
-    # Otherwise the list will be empty
-
-    for_each = (
-      # Only allow creation of tcp rules if all of the keys are not null.
-      # This allows the use of the optional variable in landing zone patterns
-      # to convert to a single typed list by adding `null` as the value.
-      # the default behavior will be to set `null` `port_min` values to 1 if null
-      # and `port_max` to 65535 if null
-      each.value.tcp == null
-      ? []
-      : length([
-        for value in ["port_min", "port_max"] :
-        true if lookup(each.value["tcp"], value, null) == null
-      ]) == 2
-      ? [] # if all values null empty array
-      : [each.value]
-    )
-
-    # Conditionally adds content if sg has tcp
-    content {
-      port_min = lookup(
-        each.value["tcp"],
-        "port_min",
-        null
-      )
-
-      port_max = lookup(
-        each.value["tcp"],
-        "port_max",
-        null
-      )
-    }
-  }
-
-  ##############################################################################
-
-  ##############################################################################
-  # Dynamically create UDP Block
-  ##############################################################################
-
-  dynamic "udp" {
-
-    # Runs a for each loop, if the rule block contains udp, it looks through the block
-    # Otherwise the list will be empty
-
-    for_each = (
-      # Only allow creation of udp rules if all of the keys are not null.
-      # This allows the use of the optional variable in landing zone patterns
-      # to convert to a single typed list by adding `null` as the value.
-      # the default behavior will be to set `null` `port_min` values to 1 if null
-      # and `port_max` to 65535 if null
-      each.value.udp == null
-      ? []
-      : length([
-        for value in ["port_min", "port_max"] :
-        true if lookup(each.value["udp"], value, null) == null
-      ]) == 2
-      ? [] # if all values null empty array
-      : [each.value]
-    )
-
-    # Conditionally adds content if sg has tcp
-    content {
-      port_min = lookup(
-        each.value["udp"],
-        "port_min",
-        null
-      )
-      port_max = lookup(
-        each.value["udp"],
-        "port_max",
-        null
-      )
-    }
-  }
-
-  ##############################################################################
+  # Use top-level protocol arguments instead of deprecated nested blocks
+  protocol = each.value.protocol
+  port_min = each.value.port_min
+  port_max = each.value.port_max
+  type     = each.value.type
+  code     = each.value.code
 }
 
 ##############################################################################
