@@ -129,6 +129,16 @@ variable "security_group_rules" {
   }
 
   validation {
+    error_message = "When protocol is `icmp`, `port_min` and `port_max` must be null. When protocol is `tcp` or `udp`, `type` and `code` must be null."
+    condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : alltrue([
+      for rule in var.security_group_rules :
+      rule.protocol == "icmp" ? (rule.port_min == null && rule.port_max == null) :
+      (rule.protocol == "tcp" || rule.protocol == "udp") ? (rule.type == null && rule.code == null) :
+      true
+    ])
+  }
+
+  validation {
     error_message = "Security group rule names must match the regex pattern ^([a-z]|[a-z][-a-z0-9_]*[a-z0-9])$ when specified."
     condition = (var.security_group_rules == null || length(var.security_group_rules) == 0) ? true : length(distinct(
       flatten([
