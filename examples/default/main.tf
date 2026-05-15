@@ -40,26 +40,28 @@ locals {
     name      = "sgr-tcp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
-    tcp = {
-      port_min = 8080
-      port_max = 8080
-    }
+    protocol  = "tcp"
+    port_min  = 8080
+    port_max  = 8080
     }, {
     name      = "sgr-udp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
-    udp = {
-      port_min = 805
-      port_max = 807
-    }
+    protocol  = "udp"
+    port_min  = 805
+    port_max  = 807
     }, {
     name      = "sgr-icmp"
     direction = "inbound"
     remote    = "0.0.0.0/0"
-    icmp = {
-      code = 20
-      type = 30
-    }
+    protocol  = "icmp"
+    type      = 30
+    code      = 20
+    }, {
+    name      = "sgr-icmp-tcp-udp"
+    direction = "inbound"
+    remote    = "0.0.0.0/0"
+    protocol  = "icmp_tcp_udp"
   }]
 }
 

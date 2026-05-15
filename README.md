@@ -7,10 +7,10 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Terraform Registry](https://img.shields.io/badge/terraform-registry-623CE4?logo=terraform)](https://registry.terraform.io/modules/terraform-ibm-modules/security-group/ibm/latest)
 
-
 This module supports most operations on security groups for VPC. For more information, see [About security groups](https://cloud.ibm.com/docs/vpc?topic=vpc-using-security-groups) in the IBM Cloud Docs.
 
 The module supports the following scenarios:
+
 - Create a security group in a VPC
 - Create security group rules for a new or existing security group
 - Create pre-defined security group rules to cover the range of IBM Cloud internal CIDRs for ([service endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#cloud-service-endpoints) and [IaaS endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#infrastructure-as-a-service-iaas-endpoints))
@@ -21,6 +21,7 @@ See the following [examples](#Examples) section for code that illustrates these 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
+
 <ul>
   <li><a href="#terraform-ibm-security-group">terraform-ibm-security-group</a></li>
   <li><a href="./examples">Examples</a>
@@ -49,6 +50,7 @@ See the following [examples](#Examples) section for code that illustrates these 
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-security-group
+
 ### Usage
 
 ```hcl
@@ -74,8 +76,8 @@ module "create_sgr_rule" {
 You need the following permissions to run this module.
 
 - IAM services
-    - **VPC Infrastructure** services
-        - `Editor` platform access
+  - **VPC Infrastructure** services
+    - `Editor` platform access
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
@@ -83,7 +85,7 @@ You need the following permissions to run this module.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.59.0, < 3.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 2.1.0, < 3.0.0 |
 
 ### Modules
 
@@ -110,7 +112,8 @@ No modules.
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | An existing resource group name to use for this example, if unset a new resource group will be created | `string` | `null` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | Add user resource tags to the Security Group instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group to be created | `string` | `"test-sg"` | no |
-| <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br/>    object({<br/>      name       = optional(string)<br/>      direction  = string<br/>      remote     = optional(string)<br/>      local      = optional(string)<br/>      ip_version = optional(string, "ipv4")<br/>      tcp = optional(<br/>        object({<br/>          port_max = optional(number)<br/>          port_min = optional(number)<br/>        })<br/>      )<br/>      udp = optional(<br/>        object({<br/>          port_max = optional(number)<br/>          port_min = optional(number)<br/>        })<br/>      )<br/>      icmp = optional(<br/>        object({<br/>          type = optional(number)<br/>          code = optional(number)<br/>        })<br/>      )<br/>    })<br/>  )</pre> | `[]` | no |
+| <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br/>    object({<br/>      name       = optional(string)<br/>      direction  = string<br/>      remote     = optional(string)<br/>      local      = optional(string)<br/>      ip_version = optional(string, "ipv4")<br/>      protocol   = optional(string)<br/>      port_min   = optional(number)<br/>      port_max   = optional(number)<br/>      type       = optional(number)<br/>      code       = optional(number)<br/>    })<br/>  )</pre> | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | List of resource tags to apply to security group created by this module. | `list(string)` | `[]` | no |
 | <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
 | <a name="input_use_existing_security_group"></a> [use\_existing\_security\_group](#input\_use\_existing\_security\_group) | If set, the modules modifies the specified existing\_security\_group\_name. | `bool` | `false` | no |
 | <a name="input_use_existing_security_group_id"></a> [use\_existing\_security\_group\_id](#input\_use\_existing\_security\_group\_id) | If set, the modules modifies the specified existing\_security\_group\_id. | `bool` | `false` | no |
