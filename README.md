@@ -21,7 +21,6 @@ See the following [examples](#Examples) section for code that illustrates these 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
 ## Overview
-
 <ul>
   <li><a href="#terraform-ibm-security-group">terraform-ibm-security-group</a></li>
   <li><a href="./examples">Examples</a>
@@ -113,7 +112,6 @@ No modules.
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | Add user resource tags to the Security Group instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group to be created | `string` | `"test-sg"` | no |
 | <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br/>    object({<br/>      name       = optional(string)<br/>      direction  = string<br/>      remote     = optional(string)<br/>      local      = optional(string)<br/>      ip_version = optional(string, "ipv4")<br/>      protocol   = optional(string)<br/>      port_min   = optional(number)<br/>      port_max   = optional(number)<br/>      type       = optional(number)<br/>      code       = optional(number)<br/>    })<br/>  )</pre> | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | List of resource tags to apply to security group created by this module. | `list(string)` | `[]` | no |
 | <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
 | <a name="input_use_existing_security_group"></a> [use\_existing\_security\_group](#input\_use\_existing\_security\_group) | If set, the modules modifies the specified existing\_security\_group\_name. | `bool` | `false` | no |
 | <a name="input_use_existing_security_group_id"></a> [use\_existing\_security\_group\_id](#input\_use\_existing\_security\_group\_id) | If set, the modules modifies the specified existing\_security\_group\_id. | `bool` | `false` | no |
