@@ -84,13 +84,6 @@ variable "access_tags" {
   description = "Add access management tags to the Security Group instance to control access. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console)."
   type        = list(string)
   default     = []
-
-  validation {
-    condition = alltrue([
-      for tag in var.access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
-    ])
-    error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\". For more information, see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits."
-  }
 }
 
 variable "resource_tags" {
