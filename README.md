@@ -7,10 +7,10 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Terraform Registry](https://img.shields.io/badge/terraform-registry-623CE4?logo=terraform)](https://registry.terraform.io/modules/terraform-ibm-modules/security-group/ibm/latest)
 
-
 This module supports most operations on security groups for VPC. For more information, see [About security groups](https://cloud.ibm.com/docs/vpc?topic=vpc-using-security-groups) in the IBM Cloud Docs.
 
 The module supports the following scenarios:
+
 - Create a security group in a VPC
 - Create security group rules for a new or existing security group
 - Create pre-defined security group rules to cover the range of IBM Cloud internal CIDRs for ([service endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#cloud-service-endpoints) and [IaaS endpoints](https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc#infrastructure-as-a-service-iaas-endpoints))
@@ -49,6 +49,7 @@ See the following [examples](#Examples) section for code that illustrates these 
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-security-group
+
 ### Usage
 
 ```hcl
@@ -74,8 +75,8 @@ module "create_sgr_rule" {
 You need the following permissions to run this module.
 
 - IAM services
-    - **VPC Infrastructure** services
-        - `Editor` platform access
+  - **VPC Infrastructure** services
+    - `Editor` platform access
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
@@ -96,20 +97,21 @@ No modules.
 | [ibm_is_security_group.sg](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group) | resource |
 | [ibm_is_security_group_rule.security_group_rule](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule) | resource |
 | [ibm_is_security_group_target.sg_target](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_target) | resource |
+| [ibm_iam_access_tag.access_tags](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/iam_access_tag) | data source |
 | [ibm_is_security_group.existing_sg](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_security_group) | data source |
 
 ### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_access_tags"></a> [access\_tags](#input\_access\_tags) | A list of access management tags to attach to the security group. For more information, see [working with tags](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console) | `list(string)` | `[]` | no |
+| <a name="input_access_tags"></a> [access\_tags](#input\_access\_tags) | Add access management tags to the Security Group instance to control access. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console). | `list(string)` | `[]` | no |
 | <a name="input_add_ibm_cloud_internal_rules"></a> [add\_ibm\_cloud\_internal\_rules](#input\_add\_ibm\_cloud\_internal\_rules) | Add IBM cloud Internal rules to the provided security group rules | `bool` | `false` | no |
 | <a name="input_existing_security_group_id"></a> [existing\_security\_group\_id](#input\_existing\_security\_group\_id) | Id of an existing security group. Mutually exclusive with `existing_security_group_name`. If set, rules will be added to the specified security group. | `string` | `null` | no |
 | <a name="input_existing_security_group_name"></a> [existing\_security\_group\_name](#input\_existing\_security\_group\_name) | Name of an existing security group. Mutually exclusive with `existing_security_group_id`. If set, rules will be added to the specified security group. | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | An existing resource group name to use for this example, if unset a new resource group will be created | `string` | `null` | no |
+| <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | Add user resource tags to the Security Group instance to organize, track, and manage costs. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#tag-types). | `list(string)` | `[]` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group to be created | `string` | `"test-sg"` | no |
 | <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of security group rules to be added to the default vpc security group | <pre>list(<br/>    object({<br/>      name       = optional(string)<br/>      direction  = string<br/>      remote     = optional(string)<br/>      local      = optional(string)<br/>      ip_version = optional(string, "ipv4")<br/>      protocol   = optional(string)<br/>      port_min   = optional(number)<br/>      port_max   = optional(number)<br/>      type       = optional(number)<br/>      code       = optional(number)<br/>    })<br/>  )</pre> | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | List of resource tags to apply to security group created by this module. | `list(string)` | `[]` | no |
 | <a name="input_target_ids"></a> [target\_ids](#input\_target\_ids) | (Optional) A list of target identifiers from the same VPC as the security group. It may contain one or more of the following identifiers: network interface, application load balancer, endpoint gateway, and VPN server | `list(string)` | `[]` | no |
 | <a name="input_use_existing_security_group"></a> [use\_existing\_security\_group](#input\_use\_existing\_security\_group) | If set, the modules modifies the specified existing\_security\_group\_name. | `bool` | `false` | no |
 | <a name="input_use_existing_security_group_id"></a> [use\_existing\_security\_group\_id](#input\_use\_existing\_security\_group\_id) | If set, the modules modifies the specified existing\_security\_group\_id. | `bool` | `false` | no |

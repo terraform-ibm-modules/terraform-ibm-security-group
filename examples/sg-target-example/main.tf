@@ -51,5 +51,5 @@ module "create_sgr_rule" {
   vpc_id                       = module.vpc.vpc_id
   target_ids                   = [ibm_is_lb.sg_lb.id]
   access_tags                  = var.access_tags
-  tags                         = var.resource_tags
+  resource_tags                = var.resource_tags
 }

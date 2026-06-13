@@ -74,16 +74,23 @@ locals {
 
 resource "ibm_is_security_group" "sg" {
   count          = var.use_existing_security_group || var.use_existing_security_group_id ? 0 : 1
+  depends_on     = [data.ibm_iam_access_tag.access_tags]
   name           = var.security_group_name
   vpc            = var.vpc_id
   resource_group = var.resource_group
   access_tags    = var.access_tags
-  tags           = var.tags
+  tags           = var.resource_tags
 }
 
 data "ibm_is_security_group" "existing_sg" {
   count = var.use_existing_security_group ? 1 : 0
   name  = var.existing_security_group_name
+}
+
+# Check whether access tags are valid and exist in the account
+data "ibm_iam_access_tag" "access_tags" {
+  for_each = length(var.access_tags) != 0 ? toset(var.access_tags) : [] # Force dependency on data source validation to ensure access_tags exist and are valid before use.
+  name     = each.value
 }
 
 ############################################################################
