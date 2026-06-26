@@ -42,8 +42,8 @@ module "add_rules_to_workernodes_sg" {
     local      = "0.0.0.0/0"
     ip_version = "ipv4"
   }]
-  access_tags = var.access_tags
-  tags        = var.resource_tags
+  access_tags   = var.access_tags
+  resource_tags = var.resource_tags
 }
 
 ##############################################################################
@@ -65,6 +65,6 @@ module "add_rules_to_lbvpc_sg" {
     port_min   = 443
     port_max   = 443
   }]
-  access_tags = var.access_tags
-  tags        = var.resource_tags
+  access_tags   = var.access_tags
+  resource_tags = var.resource_tags
 }

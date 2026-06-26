@@ -74,7 +74,7 @@ module "create_sgr_rule" {
   resource_group               = module.resource_group.resource_group_id
   vpc_id                       = module.vpc.vpc_id
   access_tags                  = var.access_tags
-  tags                         = var.resource_tags
+  resource_tags                = var.resource_tags
 }
 
 # Example of creating new SG and rule, with the rule allowing access from another existing security group
@@ -91,7 +91,7 @@ module "create_sgr_rule1" {
   resource_group = module.resource_group.resource_group_id
   vpc_id         = module.vpc.vpc_id
   access_tags    = var.access_tags
-  tags           = var.resource_tags
+  resource_tags  = var.resource_tags
 }
 
 # Example of new SG and rule, with the rule referencing the same SG that was created (self-reference)
@@ -108,5 +108,5 @@ module "create_sgr_rule2" {
   resource_group = module.resource_group.resource_group_id
   vpc_id         = module.vpc.vpc_id
   access_tags    = var.access_tags
-  tags           = var.resource_tags
+  resource_tags  = var.resource_tags
 }

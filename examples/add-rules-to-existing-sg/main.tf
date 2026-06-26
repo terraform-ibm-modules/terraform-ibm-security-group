@@ -54,6 +54,6 @@ module "add_rules_to_sg" {
     local      = "0.0.0.0/0"
     ip_version = "ipv4"
   }]
-  access_tags = var.access_tags
-  tags        = var.resource_tags
+  access_tags   = var.access_tags
+  resource_tags = var.resource_tags
 }
