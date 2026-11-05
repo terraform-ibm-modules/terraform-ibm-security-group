@@ -82,7 +82,7 @@ You need the following permissions to run this module.
 ### Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
 | <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 2.1.0, < 3.0.0 |
 
@@ -93,7 +93,7 @@ No modules.
 ### Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [ibm_is_security_group.sg](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group) | resource |
 | [ibm_is_security_group_rule.security_group_rule](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule) | resource |
 | [ibm_is_security_group_target.sg_target](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_target) | resource |
@@ -103,7 +103,7 @@ No modules.
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_access_tags"></a> [access\_tags](#input\_access\_tags) | Add access management tags to the Security Group instance to control access. [Learn more](https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#create-access-console). | `list(string)` | `[]` | no |
 | <a name="input_add_ibm_cloud_internal_rules"></a> [add\_ibm\_cloud\_internal\_rules](#input\_add\_ibm\_cloud\_internal\_rules) | Add IBM cloud Internal rules to the provided security group rules | `bool` | `false` | no |
 | <a name="input_existing_security_group_id"></a> [existing\_security\_group\_id](#input\_existing\_security\_group\_id) | Id of an existing security group. Mutually exclusive with `existing_security_group_name`. If set, rules will be added to the specified security group. | `string` | `null` | no |
@@ -120,7 +120,7 @@ No modules.
 ### Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the security group where the rules are added. NOTE: This value will not be available until rules are applied, and it cannot be referenced as a remote for a rule variable for the same module block. If you need this value to use in a rule you are supplying, please use the `security_group_id_for_ref` output instead. |
 | <a name="output_security_group_id_for_ref"></a> [security\_group\_id\_for\_ref](#output\_security\_group\_id\_for\_ref) | The ID of the security group which can be used as remote reference in rules. NOTE: This value will be available as soon as the security group is created, and before rules are applied, which means it can be referenced as a remote in the rules input variable itself. If you require that all rules are applied first, please use the `security_group_id` output instead. |
 | <a name="output_security_group_rule"></a> [security\_group\_rule](#output\_security\_group\_rule) | Security group rules |
